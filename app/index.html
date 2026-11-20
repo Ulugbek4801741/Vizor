@@ -46,12 +46,85 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
 #holidayMusic{position:fixed;right:14px;bottom:92px;z-index:85;border:0;border-radius:999px;padding:12px 16px;background:linear-gradient(110deg,#c62966,#178b68);color:white;font-weight:900;box-shadow:0 8px 22px #a62b653f}
 @media(max-width:520px){.festive-bar{top:58px;font-size:12px;gap:6px}.festive-bar span{font-size:11px}#vizorSanta{top:130px}#holidayMusic{right:9px;bottom:85px;padding:10px 13px}}
 @media(prefers-reduced-motion:reduce){#vizorSanta{animation:none;left:auto;right:12px}.screen.active:before,.screen.active:after{opacity:.12}}
+
+/* Animated storybook Santa parade and music selector */
+#holidayParade{position:fixed;z-index:82;left:0;right:0;top:112px;height:180px;pointer-events:none;overflow:hidden}
+#holidayParade svg{position:absolute;width:min(760px,94vw);height:auto;left:-800px;bottom:0;filter:drop-shadow(0 8px 7px #17365f20);animation:paradeWalk 28s linear infinite}
+@keyframes paradeWalk{0%{left:-800px}100%{left:calc(100vw + 20px)}}
+.rolling-snow{transform-origin:52px 150px;animation:snowballRoll 5.5s ease-in forwards}
+@keyframes snowballRoll{0%{transform:translateX(0) rotate(0);opacity:1}70%{transform:translateX(80px) rotate(720deg);opacity:1}100%{transform:translateX(120px) rotate(1080deg);opacity:0}}
+.santa-figure{transform-origin:160px 190px;animation:santaGrow 5.5s ease-out both,santaBob .7s ease-in-out 5.5s infinite alternate}
+@keyframes santaGrow{0%{transform:translate(12px,40px) scale(.06);opacity:0}55%{transform:translate(5px,15px) scale(.45);opacity:.65}100%{transform:translate(0,0) scale(1);opacity:1}}
+@keyframes santaBob{to{transform:translateY(-5px)}}
+.elf{animation:elfWalk .38s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center bottom}
+.elf-two{animation-delay:.17s}
+@keyframes elfWalk{to{translate:0 -5px;rotate:2deg}}
+.elf-gift{transform-origin:center;animation:giftWave .8s ease-in-out infinite alternate}
+@keyframes giftWave{to{rotate:8deg;translate:0 -4px}}
+.sparkles{animation:sparkle 1.1s ease-in-out infinite alternate}
+@keyframes sparkle{to{opacity:.35;transform:translateY(-8px)}}
+.holiday-music-wrap{position:fixed;right:14px;bottom:92px;z-index:86;display:grid;justify-items:end;gap:8px}
+#holidayMusic{border:0;border-radius:999px;padding:12px 16px;background:linear-gradient(110deg,#c62966,#178b68);color:white;font-weight:900;box-shadow:0 8px 22px #a62b653f}
+.holiday-panel{width:min(340px,calc(100vw - 24px));padding:16px;display:grid;gap:9px;border:1px solid #f0c6d8;border-radius:18px;background:#fffdfd;box-shadow:0 12px 38px #233e5c35;color:#284b6e}
+.holiday-panel select{width:100%;padding:11px;border:1px solid #d9e7f5;border-radius:11px;background:#f8fbff;color:#17365f}
+.holiday-panel .actions{margin-top:0}
+.music-upload{display:grid;gap:6px;padding:11px;border:1px dashed #d98eae;border-radius:12px;background:#fff5f9;font-size:13px;font-weight:800}
+.music-upload input{width:100%;font-size:12px}
+.music-upload small{font-size:11px;font-weight:500;color:#6480a4}
+@media(max-width:520px){#holidayParade{top:122px;height:130px}#holidayParade svg{width:650px}.holiday-music-wrap{right:8px;bottom:86px}.holiday-panel{padding:13px}}
+@media(prefers-reduced-motion:reduce){#holidayParade svg,.elf,.santa-figure,.sparkles{animation:none!important}#holidayParade svg{left:2vw}}
 </style></head><body>
 <header><div class="brand"><span class="eye">◉</span><span>VIZOR<small>OCHIQ TA’LIM PLATFORMASI</small></span></div><div class="topnav"><span class="tag mode">Mehmon rejimi</span><button id="authOpen" class="primary">Kirish</button><button id="logout" class="hidden">Chiqish</button><button id="install" class="hidden">O‘rnatish</button></div></header>
 <main>
 <div class="festive-bar"><span>❄️ VIZOR — Yangi yil mo‘jizasi! ✨ Har bir yangi bilim — yangi imkoniyat 🎄</span><span>☃️</span></div>
-<canvas id="vizorSnow" aria-hidden="true"></canvas><div id="vizorSanta" aria-hidden="true">🎅🛷</div>
-<button id="holidayMusic" type="button" aria-pressed="false">🎵 Yangi yil musiqasi: yoqish</button>
+<canvas id="vizorSnow" aria-hidden="true"></canvas>
+<div id="holidayParade" aria-label="Qor odamidan Qorbobo va yordamchi elflar paydo bo‘lib, sovg‘alar tarqatmoqda">
+ <svg viewBox="0 0 760 210" role="img" aria-label="Qor odamidan paydo bo‘lgan Qorbobo va sovg‘a ko‘tarayotgan ikki elf" xmlns="http://www.w3.org/2000/svg">
+  <g class="rolling-snow"><circle cx="52" cy="150" r="27" fill="#fff" stroke="#c8e8fb" stroke-width="5"/><circle cx="43" cy="142" r="4" fill="#8abbd8"/><circle cx="61" cy="159" r="3" fill="#8abbd8"/></g>
+  <g class="santa-figure">
+   <ellipse cx="160" cy="181" rx="91" ry="10" fill="#16436a" opacity=".13"/>
+   <path d="M101 91 Q91 123 100 169 Q160 194 220 169 L219 105Z" fill="#c51f42" stroke="#8f1733" stroke-width="4"/>
+   <path d="M157 97 L157 180" stroke="#fff0e5" stroke-width="13"/><circle cx="157" cy="132" r="6" fill="#f7cf69"/><circle cx="157" cy="155" r="6" fill="#f7cf69"/>
+   <path d="M105 108 Q76 121 82 155 L106 163 L126 129" fill="#c51f42" stroke="#8f1733" stroke-width="4"/><path d="M83 151 Q91 165 109 159" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+   <path d="M214 108 Q244 123 238 153 L215 163 L196 130" fill="#c51f42" stroke="#8f1733" stroke-width="4"/><path d="M214 157 Q228 166 239 151" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+   <path d="M108 170 L104 197 L139 197 L146 177 M178 177 L185 197 L219 197 L211 168" fill="#283d60" stroke="#182b48" stroke-width="4"/><path d="M99 198 L140 198 M181 198 L223 198" stroke="#242b37" stroke-width="10" stroke-linecap="round"/>
+   <circle cx="159" cy="69" r="43" fill="#f1bd91" stroke="#d69b70" stroke-width="3"/>
+   <path d="M119 70 Q119 107 159 116 Q201 107 200 69 Q190 89 159 87 Q132 88 119 70" fill="#fff" stroke="#e6edf3" stroke-width="3"/>
+   <path d="M126 77 Q134 56 145 77 Q158 91 170 77 Q183 57 193 77" fill="#fff"/>
+   <circle cx="145" cy="67" r="4" fill="#24384b"/><circle cx="175" cy="67" r="4" fill="#24384b"/><path d="M151 83 Q160 90 169 83" fill="none" stroke="#a34843" stroke-width="3" stroke-linecap="round"/>
+   <path d="M119 47 Q124 6 169 8 Q199 10 202 48 L185 43 Q165 29 139 47Z" fill="#d32145" stroke="#991735" stroke-width="4"/><path d="M121 45 Q160 34 199 47" stroke="#fff" stroke-width="12" stroke-linecap="round"/><circle cx="171" cy="11" r="12" fill="#fff"/>
+   <path d="M120 100 Q158 121 198 99" stroke="#fff" stroke-width="15" stroke-linecap="round"/>
+   <g class="gift-sack"><path d="M218 129 Q244 111 268 132 L260 174 L224 171Z" fill="#23936b" stroke="#126647" stroke-width="3"/><path d="M222 131 Q244 117 263 132" fill="none" stroke="#f5d46d" stroke-width="7"/></g>
+  </g>
+  <g class="elf elf-one" transform="translate(310 38)">
+   <ellipse cx="34" cy="158" rx="39" ry="6" fill="#16436a" opacity=".13"/><path d="M10 92 L2 151 L68 151 L59 91Z" fill="#18865c" stroke="#116044" stroke-width="3"/>
+   <path d="M7 110 L-9 137 L1 145 L22 122 M61 108 L81 133 L72 143 L50 123" fill="none" stroke="#18865c" stroke-width="12" stroke-linecap="round"/>
+   <circle cx="34" cy="68" r="29" fill="#e8b98d"/><path d="M7 61 L-5 42 L18 47 L33 20 L45 46 L70 39 L59 62Z" fill="#19895e" stroke="#116044" stroke-width="3"/><path d="M8 53 Q35 42 61 53" stroke="#f5d46d" stroke-width="7"/>
+   <circle cx="25" cy="69" r="3" fill="#24384b"/><circle cx="43" cy="69" r="3" fill="#24384b"/><path d="M27 81 Q34 87 42 81" stroke="#a34843" stroke-width="2" fill="none"/>
+   <path d="M13 151 L7 176 L28 176 L34 153 M43 153 L48 176 L68 176 L60 151" fill="#b52d4d"/><path d="M4 178 L29 178 M45 178 L71 178" stroke="#28384d" stroke-width="8" stroke-linecap="round"/>
+   <g class="elf-gift"><rect x="69" y="115" width="35" height="32" rx="4" fill="#e5b43f"/><path d="M86 115 V147 M69 130 H104" stroke="#c33b5c" stroke-width="5"/><path d="M86 116 Q69 96 80 101 Q91 102 86 116 Q99 96 101 106 Q102 116 86 116" fill="#c33b5c"/></g>
+  </g>
+  <g class="elf elf-two" transform="translate(440 53) scale(.88)">
+   <ellipse cx="34" cy="158" rx="39" ry="6" fill="#16436a" opacity=".13"/><path d="M10 92 L2 151 L68 151 L59 91Z" fill="#2475b8" stroke="#14558c" stroke-width="3"/>
+   <path d="M7 110 L-9 137 L1 145 L22 122 M61 108 L81 133 L72 143 L50 123" fill="none" stroke="#2475b8" stroke-width="12" stroke-linecap="round"/>
+   <circle cx="34" cy="68" r="29" fill="#dba47c"/><path d="M6 59 Q10 20 37 27 Q65 22 65 61 L51 48 L34 54 L17 47Z" fill="#d83d62" stroke="#a52648" stroke-width="3"/><path d="M9 52 Q34 42 61 53" stroke="#fff" stroke-width="7"/>
+   <circle cx="25" cy="69" r="3" fill="#24384b"/><circle cx="43" cy="69" r="3" fill="#24384b"/><path d="M27 81 Q34 87 42 81" stroke="#a34843" stroke-width="2" fill="none"/>
+   <path d="M13 151 L7 176 L28 176 L34 153 M43 153 L48 176 L68 176 L60 151" fill="#c43a57"/><path d="M4 178 L29 178 M45 178 L71 178" stroke="#28384d" stroke-width="8" stroke-linecap="round"/>
+   <g class="elf-gift"><rect x="69" y="115" width="35" height="32" rx="4" fill="#e8f0fa"/><path d="M86 115 V147 M69 130 H104" stroke="#d83d62" stroke-width="5"/></g>
+  </g>
+  <g class="sparkles" fill="#e8b13e"><path d="M570 35 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5Z"/><path d="M650 116 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4Z"/><path d="M540 150 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3Z"/></g>
+ </svg>
+</div>
+<div class="holiday-music-wrap">
+ <button id="holidayMusic" type="button" aria-expanded="false">🎵 Yangi yil musiqalarini tanlash</button>
+ <div id="holidayMusicPanel" class="holiday-panel hidden">
+  <strong>🎄 Yangi yil musiqalari</strong>
+  <label for="holidayTrack">10 ta original kuy:</label>
+  <select id="holidayTrack"><option value="0">1. Qorli tun — zamonaviy pop</option><option value="1">2. Yangi yil raqsi — dance</option><option value="2">3. Sehrli qo‘ng‘iroqlar — bells</option><option value="3">4. Qish ertagi — piano</option><option value="4">5. Elf bayrami — upbeat</option><option value="5">6. Santa groove — funk</option><option value="6">7. Yulduzli osmon — chill</option><option value="7">8. Bayram chiroqlari — synth</option><option value="8">9. Qor parchalari — orchestral</option><option value="9">10. Mo‘jizali lahza — cinematic</option></select>
+  <div class="actions"><button id="musicPlay" class="primary" type="button">▶ Tinglash</button><button id="musicStop" class="btn" type="button">■ To‘xtatish</button></div>
+  <label class="music-upload">📱 Telefoningizdan 1 daqiqalik musiqa tanlang <input id="personalHolidayAudio" type="file" accept="audio/*"><small id="personalAudioName">O‘zingiz xohlagan audio faylni tanlang (ko‘pi bilan 60 soniya eshittiriladi).</small></label>
+ </div>
+</div>
 
 <div id="home" class="screen active">
 <div class="hero"><span class="tag">BILIM OLISH — HAMMA UCHUN</span><h1>BILIMGA SARMOYA — VIZOR TA’LIM PLATFORMASI</h1><p>Tillar, fanlar va zamonaviy texnologiyalarni o‘rganing. Video darslar, jonli efirlar, testlar va natijalar — barchasi bitta joyda.</p><a class="admin-contact" href="https://t.me/uktamovna_009" target="_blank" rel="noopener noreferrer" aria-label="Telegram orqali admin bilan bog‘lanish"><span class="admin-contact-icon">✈</span><span><strong>Admin</strong><small>Telegram orqali bog‘lanish</small></span><span class="admin-contact-arrow">↗</span></a><div class="actions"><button class="primary" id="guestEnter">Mehmon sifatida kirish</button><button class="btn" data-go="courses">Kurslarni ko‘rish →</button></div><div id="message" role="status"></div></div>
@@ -104,19 +177,35 @@ $('lessonForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/course
 $('quizForm').onsubmit=async e=>{e.preventDefault();try{let questions=JSON.parse($('quizQuestions').value);await api('/api/courses/'+currentCourseId+'/quizzes',{method:'POST',body:JSON.stringify({title:$('quizTitle').value,questions})});alert('Test saqlandi.');e.target.reset()}catch(e){alert('Test ma’lumotlarini tekshiring: '+e.message)}};
 updateMode();loadCourses();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('install').classList.remove('hidden')});$('install').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('install').classList.add('hidden')}};
 
-/* Festive snowfall, moving Santa and original generated holiday melody */
+/* Winter snowfall, animated Santa-and-elf parade, ten original melodies and personal 60-second audio */
 (()=>{
- const canvas=document.getElementById('vizorSnow'),ctx=canvas.getContext('2d');let flakes=[],w=0,h=0,raf=0;
+ const canvas=$('vizorSnow'),ctx=canvas.getContext('2d');let flakes=[],w=0,h=0;
  function resize(){w=canvas.width=innerWidth*devicePixelRatio;h=canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';flakes=Array.from({length:Math.min(110,Math.floor(innerWidth/8))},()=>({x:Math.random()*w,y:Math.random()*h,r:(1+Math.random()*3)*devicePixelRatio,v:(.5+Math.random()*1.6)*devicePixelRatio,d:(Math.random()-.5)*.5*devicePixelRatio}))}
- function snow(){ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,.88)';ctx.beginPath();for(const f of flakes){ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.r,0,Math.PI*2);f.y+=f.v;f.x+=f.d+Math.sin(f.y/45)*.25*devicePixelRatio;if(f.y>h+5){f.y=-5;f.x=Math.random()*w}if(f.x>w)f.x=0;if(f.x<0)f.x=w}ctx.fill();raf=requestAnimationFrame(snow)}
+ function snow(){ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,.88)';ctx.beginPath();for(const f of flakes){ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.r,0,Math.PI*2);f.y+=f.v;f.x+=f.d+Math.sin(f.y/45)*.25*devicePixelRatio;if(f.y>h+5){f.y=-5;f.x=Math.random()*w}if(f.x>w)f.x=0;if(f.x<0)f.x=w}ctx.fill();requestAnimationFrame(snow)}
  addEventListener('resize',resize,{passive:true});resize();snow();
- const btn=document.getElementById('holidayMusic');let audio=null,timer=null,step=0;
- // Original short festive melody; browser audio starts only after the visitor taps.
- const notes=[659,784,880,784,659,523,587,659,587,523,440,523,659,784,659,587,523,587,659,523];
- function play(){if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();const now=audio.currentTime;const osc=audio.createOscillator(),gain=audio.createGain();osc.type='sine';osc.frequency.value=notes[step%notes.length];gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.055,now+.035);gain.gain.exponentialRampToValueAtTime(.0001,now+.27);osc.connect(gain);gain.connect(audio.destination);osc.start(now);osc.stop(now+.29);step++}
- function stop(){if(timer)clearInterval(timer);timer=null;btn.textContent='🎵 Yangi yil musiqasi: yoqish';btn.setAttribute('aria-pressed','false')}
- btn.addEventListener('click',()=>{if(timer){stop();return}play();timer=setInterval(play,320);btn.textContent='🔇 Musiqani o‘chirish';btn.setAttribute('aria-pressed','true')});
- function preview(inputId,targetId){const input=document.getElementById(inputId),target=document.getElementById(targetId);if(!input||!target)return;input.addEventListener('change',()=>{target.innerHTML='';const files=[...input.files];if(!files.length){target.textContent='Hozircha fayl tanlanmagan.';return}files.forEach(file=>{const row=document.createElement('div');row.textContent='📎 '+file.name+' · '+(file.size/1024/1024).toFixed(2)+' MB';target.append(row);if(file.type.startsWith('image/')){const img=document.createElement('img');img.src=URL.createObjectURL(file);img.alt=file.name;target.append(img)}else if(file.type.startsWith('video/')){const video=document.createElement('video');video.src=URL.createObjectURL(file);video.controls=true;video.style.maxWidth='100%';target.append(video)}else if(file.type==='application/pdf'){const link=document.createElement('a');link.href=URL.createObjectURL(file);link.target='_blank';link.rel='noopener';link.textContent='PDF faylni ochish';target.append(link)}})})}
- preview('courseFiles','courseFilesPreview');preview('lessonFiles','lessonFilesPreview');preview('portfolioFiles','portfolioPreview');
+ const panel=$('holidayMusicPanel'),toggle=$('holidayMusic'),playBtn=$('musicPlay'),stopBtn=$('musicStop'),trackSelect=$('holidayTrack'),fileInput=$('personalHolidayAudio'),fileName=$('personalAudioName');
+ const tracks=[
+  {name:'Qorli tun',bpm:112,wave:'triangle',notes:[659,784,880,784,659,587,659,784,880,988,880,784,659,587,523,587]},
+  {name:'Yangi yil raqsi',bpm:126,wave:'sawtooth',notes:[523,659,784,659,587,740,880,740,659,784,988,784,587,698,880,698]},
+  {name:'Sehrli qo‘ng‘iroqlar',bpm:104,wave:'sine',notes:[880,1046,1318,1046,988,1174,1480,1174,880,1046,1318,1568,1318,1174,1046,988]},
+  {name:'Qish ertagi',bpm:86,wave:'sine',notes:[523,659,784,1046,988,784,659,587,523,587,659,784,880,784,659,523]},
+  {name:'Elf bayrami',bpm:132,wave:'square',notes:[784,784,659,784,880,880,784,659,587,659,784,880,988,880,784,659]},
+  {name:'Santa groove',bpm:118,wave:'triangle',notes:[392,523,587,659,587,523,392,440,523,587,659,784,659,587,523,440]},
+  {name:'Yulduzli osmon',bpm:78,wave:'sine',notes:[440,523,659,784,659,523,494,587,740,880,740,587,440,523,659,523]},
+  {name:'Bayram chiroqlari',bpm:120,wave:'sawtooth',notes:[659,659,784,988,880,784,659,587,659,784,880,1174,1046,880,784,659]},
+  {name:'Qor parchalari',bpm:96,wave:'triangle',notes:[523,659,784,880,1046,880,784,659,587,698,880,988,880,698,587,523]},
+  {name:'Mo‘jizali lahza',bpm:90,wave:'sine',notes:[392,494,587,784,880,784,587,494,440,523,659,880,988,880,659,523]}
+ ];
+ let audio=null,interval=null,step=0,uploaded=null,stopUploadTimer=null;
+ function stop(){if(interval)clearInterval(interval);interval=null;if(stopUploadTimer)clearTimeout(stopUploadTimer);stopUploadTimer=null;if(uploaded){uploaded.pause();uploaded.currentTime=0}playBtn.textContent='▶ Tinglash';toggle.textContent='🎵 Yangi yil musiqalarini tanlash';toggle.setAttribute('aria-expanded',panel.classList.contains('hidden')?'false':'true')}
+ function note(freq,duration,wave,when,vol){const osc=audio.createOscillator(),gain=audio.createGain();osc.type=wave;osc.frequency.setValueAtTime(freq,when);gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(vol,when+.025);gain.gain.exponentialRampToValueAtTime(.0001,when+duration);osc.connect(gain);gain.connect(audio.destination);osc.start(when);osc.stop(when+duration+.02)}
+ function playTrack(){const t=tracks[Number(trackSelect.value)]||tracks[0];if(!audio)audio=new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();step=0;const beat=60000/t.bpm;function tick(){const n=t.notes[step%t.notes.length],now=audio.currentTime;note(n,.24,t.wave,now,.045);if(step%4===0){note(n/2,.34,'sine',now,.022);note(n*1.25,.13,'sine',now+.05,.012)}if(step%2===1)note(n*2,.10,'sine',now+.04,.009);step++}tick();interval=setInterval(tick,beat/2);playBtn.textContent='Ⅱ Musiqa chalinmoqda';toggle.textContent='🎵 Musiqa tanlash / to‘xtatish'}
+ toggle.addEventListener('click',()=>{panel.classList.toggle('hidden');toggle.setAttribute('aria-expanded',String(!panel.classList.contains('hidden')))});
+ playBtn.addEventListener('click',()=>{stop();uploaded=null;playTrack()});
+ stopBtn.addEventListener('click',()=>stop());
+ trackSelect.addEventListener('change',()=>{if(interval){stop();playTrack()}});
+ fileInput.addEventListener('change',()=>{stop();if(uploaded){URL.revokeObjectURL(uploaded.src);uploaded=null}const file=fileInput.files&&fileInput.files[0];if(!file){fileName.textContent='O‘zingiz xohlagan audio faylni tanlang (ko‘pi bilan 60 soniya eshittiriladi).';return}if(!file.type.startsWith('audio/')){fileName.textContent='Audio fayl tanlang.';fileInput.value='';return}uploaded=new Audio(URL.createObjectURL(file));uploaded.preload='metadata';fileName.textContent=file.name+' — 60 soniyagacha tinglanadi.';uploaded.addEventListener('loadedmetadata',()=>{if(!Number.isFinite(uploaded.duration)){fileName.textContent='Audio davomiyligini aniqlab bo‘lmadi.';return}if(uploaded.duration<=0){fileName.textContent='Bu audio faylni ochib bo‘lmadi.';return}},{once:true});uploaded.addEventListener('error',()=>{fileName.textContent='Audio fayl ochilmadi. Boshqa fayl tanlang.'},{once:true});uploaded.addEventListener('ended',()=>stop(),{once:true});playBtn.textContent='▶ Telefonimdagi musiqani tinglash';playBtn.onclick=()=>{stop();if(!uploaded)return;uploaded.currentTime=0;uploaded.play().then(()=>{toggle.textContent='🔊 Siz tanlagan musiqa';stopUploadTimer=setTimeout(stop,60000);playBtn.textContent='Ⅱ Musiqa chalinmoqda'}).catch(()=>{fileName.textContent='Audio ishga tushmadi. Qayta tanlang.'})};});
+ const originalPlay=()=>{if(fileInput.files&&fileInput.files.length&&uploaded){playBtn.onclick=null;stop();uploaded.currentTime=0;uploaded.play().then(()=>{stopUploadTimer=setTimeout(stop,60000);playBtn.textContent='Ⅱ Musiqa chalinmoqda'}).catch(()=>{});return}stop();playTrack()};
+ playBtn.onclick=originalPlay;
 })();
 </script></body></html>
