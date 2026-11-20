@@ -159,9 +159,9 @@ input,select,textarea{min-width:0;max-width:100%}
 
 /* New Year greeting: ten letter bursts in six seconds */
 #newYearGreeting{position:fixed;inset:0;z-index:5;display:grid;place-items:center;pointer-events:none;overflow:hidden;padding:16px;text-align:center}
-#newYearGreeting .greeting-line{max-width:100%;font-weight:1000;font-size:clamp(25px,7vw,76px);line-height:1.08;letter-spacing:clamp(1px,.5vw,6px);color:#d51f68;text-shadow:0 3px 0 #fff,0 7px 22px #16395b55;overflow-wrap:anywhere}
-#newYearGreeting .greeting-letter{display:inline-block;opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.2);animation:greetingBurst .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--delay)}
-@keyframes greetingBurst{0%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.15)}20%{opacity:1;transform:translate(0,0) rotate(0) scale(1.12)}55%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(calc(var(--dx)*1.25),calc(var(--dy)*1.25)) rotate(calc(var(--rot)*1.5)) scale(.35)}}
+#newYearGreeting .greeting-line{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;max-width:100%;font-weight:1000;font-size:clamp(23px,6.5vw,76px);line-height:1.12;letter-spacing:clamp(0px,.35vw,4px);color:#d51f68;text-shadow:0 3px 0 #fff,0 7px 22px #16395b55;overflow-wrap:anywhere}
+#newYearGreeting .greeting-letter{display:inline-block;white-space:pre;opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.2);animation:greetingBurst .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes greetingBurst{0%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.25)}18%{opacity:1;transform:translate(0,0) rotate(0) scale(1.08)}72%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(calc(var(--dx)*.8),calc(var(--dy)*.8)) rotate(var(--rot)) scale(.45)}}
 .holiday-music-wrap{right:12px;bottom:92px}
 #holidayMusic{width:46px;height:46px;min-height:46px;padding:0;display:grid;place-items:center;border-radius:50%;font-size:22px;line-height:1;box-shadow:0 5px 16px #a62b653f}
 @media(max-width:520px){.holiday-music-wrap{right:8px;bottom:86px}#holidayMusic{width:42px;height:42px;min-height:42px;font-size:20px}}
