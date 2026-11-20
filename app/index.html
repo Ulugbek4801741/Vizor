@@ -77,20 +77,20 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
 /* 60-second winter film sequence: staged arrivals, character motion and sleigh departure */
 #holidayParade,#vizorSanta{display:none!important}
 #winterStory{position:fixed;inset:0;z-index:83;pointer-events:none;overflow:hidden}
-#winterStory svg{position:absolute;left:50%;bottom:0;width:min(100vw,1100px);height:min(48vh,390px);min-height:220px;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 8px 12px #17365f30)}
+#winterStory svg{position:absolute;left:50%;bottom:0;width:min(100vw,1400px);height:min(62vh,560px);min-height:280px;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 10px 16px #17365f40)}
 .story-arrival{animation:storyArrive 60s linear infinite}
 @keyframes storyArrive{0%,3%{transform:translate(-370px,0)}12%,72%{transform:translate(0,0)}86%{transform:translate(0,-100px) scale(.82);opacity:1}100%{transform:translate(0,-720px) scale(.2);opacity:0}}
 .story-snow-santa{transform-origin:155px 245px;animation:storyAssemble 5s ease-out both, santaBreath 2.8s ease-in-out 5s infinite}
-@keyframes storyAssemble{0%{transform:translate(35px,-65px) scale(.08);opacity:0}30%{transform:translate(0,0) scale(1.08);opacity:1}45%,100%{transform:translate(0,0) scale(1);opacity:1}}
+@keyframes storyAssemble{0%{transform:translate(35px,-65px) scale(.08);opacity:0}30%{transform:translate(0,0) scale(1.35);opacity:1}45%,100%{transform:translate(0,0) scale(1.28);opacity:1}}
 @keyframes santaBreath{0%,100%{translate:0 0}50%{translate:0 -2px}}
 .story-sack{transform-origin:250px 240px;animation:sackSetDown 1.2s ease-in 5.2s both}
 @keyframes sackSetDown{0%{transform:translate(-12px,-68px) rotate(-20deg)}65%{transform:translate(0,7px) rotate(7deg)}100%{transform:translate(0,0) rotate(0)}}
 .story-princess{opacity:0;animation:princessArrive 3s ease-out 8s both, princessBreath 2.5s ease-in-out 12s infinite}
-@keyframes princessArrive{0%{opacity:0;transform:translate(210px,0)}100%{opacity:1;transform:translate(0,0)}}
+@keyframes princessArrive{0%{opacity:0;translate:210px 0}100%{opacity:1;translate:0 0}}
 @keyframes princessBreath{0%,100%{translate:0 0}50%{translate:0 -2px}}
 .story-elf-a,.story-elf-b{transform-box:fill-box;transform-origin:center bottom;animation:storyElf .42s ease-in-out infinite alternate}
 .story-elf-b{animation-delay:.2s}
-@keyframes storyElf{to{transform:translateY(-6px) rotate(3deg)}}
+@keyframes storyElf{to{translate:0 -8px;rotate:3deg}}
 .story-flight{transform-origin:500px 250px;animation:storyFly 60s ease-in-out infinite}
 @keyframes storyFly{0%,74%{transform:translateY(0) scale(1);opacity:1}84%{transform:translateY(-180px) scale(.82);opacity:1}94%,100%{transform:translateY(-760px) scale(.18);opacity:0}}
 .story-reindeer{opacity:0;transform-box:fill-box;transform-origin:center bottom;animation:deerEnter 60s linear infinite}
@@ -99,8 +99,8 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
 .deer-leg.alt{animation-delay:.16s}
 @keyframes deerRun{to{transform:rotate(24deg)}}
 .story-sleigh{opacity:0;animation:sleighAppear 60s linear infinite}
-@keyframes sleighAppear{0%,37%{opacity:0;transform:translateX(40px)}44%,74%{opacity:1;transform:translateX(0)}86%{opacity:1;transform:translate(0,-180px)}100%{opacity:0;transform:translate(0,-700px)}}
-@media(max-width:520px){#winterStory svg{height:250px;min-height:250px;width:100vw}}
+@keyframes sleighAppear{0%,37%{opacity:0;translate:40px 0}44%,74%{opacity:1;translate:0 0}86%{opacity:1;translate:0 -180px}100%{opacity:0;translate:0 -700px}}
+@media(max-width:520px){#winterStory svg{height:min(58vh,460px);min-height:280px;width:100vw}}
 @media(prefers-reduced-motion:reduce){.story-arrival,.story-snow-santa,.story-sack,.story-princess,.story-elf-a,.story-elf-b,.story-flight,.story-reindeer,.deer-leg,.story-sleigh{animation:none!important;opacity:1!important;transform:none!important}}
 
 </style></head><body>
@@ -137,7 +137,7 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
     <path d="M99 296 H151 M172 296 H225" stroke="#263d59" stroke-width="11" stroke-linecap="round"/>
    </g>
    
-   <g class="story-elf-a" transform="translate(330 133)">
+   <g class="story-elf-a" transform="translate(330 133) scale(1.22)">
     <path d="M5 91 L-2 151 L62 151 L55 91Z" fill="#16865d" stroke="#116044" stroke-width="3"/>
     <circle cx="31" cy="65" r="28" fill="#e9bd98"/>
     <path d="M5 58 L-8 36 L17 44 L31 17 L46 43 L69 36 L57 62Z" fill="#16865d" stroke="#116044" stroke-width="3"/>
@@ -148,7 +148,7 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
     <path d="M0 179 H28 M41 179 H70" stroke="#263d59" stroke-width="8" stroke-linecap="round"/>
     <rect x="69" y="111" width="28" height="27" rx="3" fill="#e7b943"/><path d="M83 111 V138 M69 124 H97" stroke="#c63c5d" stroke-width="4"/>
    </g>
-   <g class="story-elf-b" transform="translate(435 145) scale(.9)">
+   <g class="story-elf-b" transform="translate(435 145) scale(1.08)">
     <path d="M5 91 L-2 151 L62 151 L55 91Z" fill="#277ab8" stroke="#14558c" stroke-width="3"/>
     <circle cx="31" cy="65" r="28" fill="#dba47c"/>
     <path d="M5 58 Q8 22 35 25 Q65 21 61 62 L48 46 L31 52 L15 45Z" fill="#d83d62" stroke="#a52648" stroke-width="3"/>
@@ -159,7 +159,7 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
     <path d="M0 179 H28 M41 179 H70" stroke="#263d59" stroke-width="8" stroke-linecap="round"/>
     <rect x="69" y="111" width="28" height="27" rx="3" fill="#d64a66"/><path d="M83 111 V138 M69 124 H97" stroke="#f4d36d" stroke-width="4"/>
    </g>
-   <g class="story-princess" transform="translate(575 125)">
+   <g class="story-princess" transform="translate(575 125) scale(1.22)">
     <ellipse cx="43" cy="157" rx="43" ry="7" fill="#8cb9d2" opacity=".2"/>
     <path d="M15 91 Q42 72 70 91 L95 166 Q42 185 -10 166Z" fill="#7fd7ef" stroke="#4baacb" stroke-width="4"/>
     <path d="M42 93 L42 168" stroke="#eaffff" stroke-width="9"/>
@@ -170,7 +170,7 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
     <path d="M36 72 Q43 78 50 72" fill="none" stroke="#b66d65" stroke-width="3"/>
     <path d="M15 100 L-4 128 M70 100 L91 128" stroke="#f0c9aa" stroke-width="10" stroke-linecap="round"/>
    </g>
-   <g class="story-reindeer" transform="translate(730 110) scale(.72)">
+   <g class="story-reindeer" transform="translate(730 110) scale(.86)">
     <path d="M18 93 Q38 54 92 61 L139 77 Q153 91 140 112 L105 122 L43 116Z" fill="#9a6544" stroke="#5f402f" stroke-width="5"/>
     <path d="M118 76 Q133 34 158 34 Q180 37 176 60 L157 79 L143 98Z" fill="#a87550" stroke="#5f402f" stroke-width="5"/>
     <path d="M163 40 Q177 22 194 28 L183 51 M157 39 Q151 14 136 10 L143 42" fill="none" stroke="#8c5939" stroke-width="6" stroke-linecap="round"/>
@@ -182,7 +182,7 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
     <path d="M22 78 Q4 62 10 46" fill="none" stroke="#805337" stroke-width="7" stroke-linecap="round"/>
     <path d="M8 46 L0 39 M8 46 L15 35" stroke="#805337" stroke-width="4"/>
    </g>
-   <g class="story-sleigh" transform="translate(650 210)">
+   <g class="story-sleigh" transform="translate(650 210) scale(1.18)">
     <path d="M0 45 Q55 63 120 42 L145 18 Q130 74 64 78 Q15 78 0 45Z" fill="#b72f4d" stroke="#6c2138" stroke-width="5"/>
     <path d="M-12 81 Q60 101 153 75" fill="none" stroke="#d9b45c" stroke-width="7" stroke-linecap="round"/>
     <path d="M28 25 L28 -4 M28 -4 Q60 -20 92 -4" fill="none" stroke="#d9b45c" stroke-width="6"/>
