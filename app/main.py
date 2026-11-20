@@ -165,6 +165,27 @@ app.add_middleware(CORSMiddleware, allow_origins=os.getenv("CORS_ORIGINS", "*").
 def startup():
     if engine is not None:
         Base.metadata.create_all(bind=engine)
+        with SessionLocal() as db:
+            if db.query(Course).count() == 0:
+                demo_teacher = User(full_name="VIZOR ta’lim jamoasi", email="platform@vizor.local", password_hash=hash_password(uuid.uuid4().hex), role="teacher")
+                db.add(demo_teacher)
+                db.flush()
+                demo_course = Course(title="Raqamli savodxonlik — boshlang‘ich", description="Internetdan xavfsiz foydalanish, kuchli parol va foydali raqamli odatlar.", category="Raqamli savodxonlik", published=True, teacher_id=demo_teacher.id)
+                db.add(demo_course)
+                db.flush()
+                demo_lessons = [
+                    Lesson(course_id=demo_course.id, title="Internet xavfsizligi", content="Shaxsiy ma’lumotlaringizni himoya qiling. Parollarni boshqa odamlarga bermang, noma’lum havolalarni ochmang va har bir xizmat uchun alohida parol ishlating.", position=1),
+                    Lesson(course_id=demo_course.id, title="Kuchli parol yaratish", content="Kuchli parol uzun bo‘ladi, katta-kichik harflar, raqamlar va belgilarni aralashtiradi. Imkon bo‘lsa, ikki bosqichli tasdiqlashni yoqing.", position=2),
+                    Lesson(course_id=demo_course.id, title="Onlayn ma’lumotni tekshirish", content="Xabar manbasini tekshiring, sanasiga qarang va muhim ma’lumotni kamida ikki ishonchli manba bilan solishtiring.", position=3)
+                ]
+                db.add_all(demo_lessons)
+                db.flush()
+                db.add(Quiz(course_id=demo_course.id, title="Raqamli savodxonlik testi", questions_json=json.dumps([
+                    {"question":"Noma’lum havola kelsa nima qilish kerak?","options":["Darhol ochish","Manbasini tekshirish va shubhali bo‘lsa ochmaslik","Hammaga yuborish"],"answer_index":1},
+                    {"question":"Kuchli parol qanday bo‘ladi?","options":["123456","Ism va tug‘ilgan yil","Uzun va murakkab, har xizmat uchun alohida"],"answer_index":2},
+                    {"question":"Muhim xabarni qanday tekshirish kerak?","options":["Faqat sarlavhaga ishonish","Bir nechta ishonchli manba bilan solishtirish","Darhol ulashish"],"answer_index":1}
+                ], ensure_ascii=False)))
+                db.commit()
 
 class RegisterIn(BaseModel):
     full_name: str = Field(min_length=2, max_length=160)
