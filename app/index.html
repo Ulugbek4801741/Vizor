@@ -166,10 +166,15 @@ input,select,textarea{min-width:0;max-width:100%}
 #holidayMusic{width:46px;height:46px;min-height:46px;padding:0;display:grid;place-items:center;border-radius:50%;font-size:22px;line-height:1;box-shadow:0 5px 16px #a62b653f}
 @media(max-width:520px){.holiday-music-wrap{right:8px;bottom:86px}#holidayMusic{width:42px;height:42px;min-height:42px;font-size:20px}}
 
-/* Winter artwork sits above page content; controls stay in the foreground. */
+/* Winter artwork is layered over page panels; interactive controls remain readable and tappable. */
 main{z-index:auto}
-#winterStory{z-index:3}
-main button,header button,.bottom-nav button,#holidayMusic,.holiday-music-wrap button{position:relative;z-index:4}
+#winterStory{z-index:5}
+#newYearGreeting{z-index:7}
+main button,header button,.bottom-nav button{position:relative;z-index:6}
+.holiday-music-wrap{position:fixed;right:8px;bottom:76px;z-index:8;display:grid;justify-items:end;gap:6px}
+#holidayMusic,.holiday-music-wrap button{position:relative;z-index:8;width:34px;height:34px;min-height:34px;padding:0;display:grid;place-items:center;border:1px solid #ffffffd9;border-radius:50%;font-size:17px;line-height:1;background:linear-gradient(145deg,#d72d70,#178b68);color:#fff;box-shadow:0 3px 10px #17365f45}
+.holiday-panel{position:relative;z-index:9}
+@media(max-width:520px){.holiday-music-wrap{right:7px;bottom:72px}#holidayMusic{width:32px;height:32px;min-height:32px;font-size:16px}}
 
 </style></head><body>
 
