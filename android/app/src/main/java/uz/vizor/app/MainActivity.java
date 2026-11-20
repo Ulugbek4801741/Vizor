@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         showApp();
-        String saved = getPreferences(MODE_PRIVATE).getString(URL_KEY, "");
+        String saved = getPreferences(MODE_PRIVATE).getString(URL_KEY, "https://vizor-platform.onrender.com");
         if (!saved.isEmpty()) openServer(saved);
     }
 
