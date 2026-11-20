@@ -8,8 +8,9 @@ from typing import Optional
 
 import jwt
 from fastapi import FastAPI, Depends, HTTPException, status, Header
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import HTMLResponse, Response, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import create_engine, String, Text, Integer, Boolean, DateTime, ForeignKey, func, UniqueConstraint
@@ -160,6 +161,7 @@ def require_roles(*roles):
 
 app = FastAPI(title="VIZOR Learning Platform API", version=APP_VERSION, description="Standalone VIZOR education platform API")
 app.add_middleware(CORSMiddleware, allow_origins=os.getenv("CORS_ORIGINS", "*").split(","), allow_credentials=False, allow_methods=["*"], allow_headers=["*"])
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @app.on_event("startup")
 def startup():
@@ -212,11 +214,14 @@ class QuizIn(BaseModel):
     title: str = Field(min_length=2, max_length=200)
     questions: list[dict] = Field(min_length=1, max_length=100)
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 def root():
-    from pathlib import Path
-    page = Path(__file__).with_name("index.html")
-    return page.read_text(encoding="utf-8") if page.exists() else "<h1>VIZOR API is running</h1>"
+    return FileResponse("app/static/index.html")
+
+@app.get("/api/public/courses")
+def public_courses(db: Session = Depends(get_db)):
+    rows = db.query(Course).filter(Course.published.is_(True)).order_by(Course.id.desc()).all()
+    return [{"id": c.id, "title": c.title, "description": c.description, "category": c.category, "teacher_id": c.teacher_id} for c in rows]
 
 @app.get("/health")
 def health():
