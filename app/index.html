@@ -74,25 +74,34 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
 @media(max-width:520px){#holidayParade{top:122px;height:130px}#holidayParade svg{width:650px}.holiday-music-wrap{right:8px;bottom:86px}.holiday-panel{padding:13px}}
 @media(prefers-reduced-motion:reduce){#holidayParade svg,.elf,.santa-figure,.sparkles{animation:none!important}#holidayParade svg{left:2vw}}
 
-/* Snow Santa story: ground-level arrival, Snow Maiden, then flying ski farewell */
+/* 60-second winter film sequence: staged arrivals, character motion and sleigh departure */
 #holidayParade,#vizorSanta{display:none!important}
 #winterStory{position:fixed;inset:0;z-index:83;pointer-events:none;overflow:hidden}
-#winterStory svg{position:absolute;left:50%;bottom:0;width:min(100vw,1100px);height:min(43vh,330px);min-height:190px;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 5px 7px #17365f20)}
-.story-arrival{animation:storyArrive 18s linear infinite}
-@keyframes storyArrive{0%,4%{transform:translate(-370px,0)}16%,67%{transform:translate(0,0)}88%,100%{transform:translate(0,-650px) scale(.25);opacity:0}}
-.story-snow-santa{transform-origin:155px 245px;animation:storyAssemble 4.8s ease-out both}
+#winterStory svg{position:absolute;left:50%;bottom:0;width:min(100vw,1100px);height:min(48vh,390px);min-height:220px;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 8px 12px #17365f30)}
+.story-arrival{animation:storyArrive 60s linear infinite}
+@keyframes storyArrive{0%,3%{transform:translate(-370px,0)}12%,72%{transform:translate(0,0)}86%{transform:translate(0,-100px) scale(.82);opacity:1}100%{transform:translate(0,-720px) scale(.2);opacity:0}}
+.story-snow-santa{transform-origin:155px 245px;animation:storyAssemble 5s ease-out both, santaBreath 2.8s ease-in-out 5s infinite}
 @keyframes storyAssemble{0%{transform:translate(35px,-65px) scale(.08);opacity:0}30%{transform:translate(0,0) scale(1.08);opacity:1}45%,100%{transform:translate(0,0) scale(1);opacity:1}}
-.story-sack{transform-origin:250px 240px;animation:sackSetDown 1.1s ease-in 5.2s both}
+@keyframes santaBreath{0%,100%{translate:0 0}50%{translate:0 -2px}}
+.story-sack{transform-origin:250px 240px;animation:sackSetDown 1.2s ease-in 5.2s both}
 @keyframes sackSetDown{0%{transform:translate(-12px,-68px) rotate(-20deg)}65%{transform:translate(0,7px) rotate(7deg)}100%{transform:translate(0,0) rotate(0)}}
-.story-princess{opacity:0;animation:princessArrive 2.8s ease-out 7.2s both}
+.story-princess{opacity:0;animation:princessArrive 3s ease-out 8s both, princessBreath 2.5s ease-in-out 12s infinite}
 @keyframes princessArrive{0%{opacity:0;transform:translate(210px,0)}100%{opacity:1;transform:translate(0,0)}}
-.story-elf-a,.story-elf-b{transform-box:fill-box;transform-origin:center bottom;animation:storyElf 0.38s ease-in-out infinite alternate}
-.story-elf-b{animation-delay:.18s}
-@keyframes storyElf{to{transform:translateY(-5px) rotate(3deg)}}
-.story-flight{transform-origin:500px 250px;animation:storyFly 18s ease-in-out infinite}
-@keyframes storyFly{0%,72%{transform:translateY(0) scale(1);opacity:1}83%{transform:translateY(-240px) scale(.72);opacity:.92}96%,100%{transform:translateY(-760px) scale(.18);opacity:0}}
-@media(max-width:520px){#winterStory svg{height:220px;min-height:220px;width:100vw}}
-@media(prefers-reduced-motion:reduce){.story-arrival,.story-snow-santa,.story-sack,.story-princess,.story-elf-a,.story-elf-b,.story-flight{animation:none!important;opacity:1!important;transform:none!important}}
+@keyframes princessBreath{0%,100%{translate:0 0}50%{translate:0 -2px}}
+.story-elf-a,.story-elf-b{transform-box:fill-box;transform-origin:center bottom;animation:storyElf .42s ease-in-out infinite alternate}
+.story-elf-b{animation-delay:.2s}
+@keyframes storyElf{to{transform:translateY(-6px) rotate(3deg)}}
+.story-flight{transform-origin:500px 250px;animation:storyFly 60s ease-in-out infinite}
+@keyframes storyFly{0%,74%{transform:translateY(0) scale(1);opacity:1}84%{transform:translateY(-180px) scale(.82);opacity:1}94%,100%{transform:translateY(-760px) scale(.18);opacity:0}}
+.story-reindeer{opacity:0;transform-box:fill-box;transform-origin:center bottom;animation:deerEnter 60s linear infinite}
+@keyframes deerEnter{0%,27%{opacity:0;translate:160px 0}34%,74%{opacity:1;translate:0 0}86%{opacity:1;translate:0 -180px}100%{opacity:0;translate:0 -700px}}
+.deer-leg{transform-box:fill-box;transform-origin:top center;animation:deerRun .32s ease-in-out infinite alternate}
+.deer-leg.alt{animation-delay:.16s}
+@keyframes deerRun{to{transform:rotate(24deg)}}
+.story-sleigh{opacity:0;animation:sleighAppear 60s linear infinite}
+@keyframes sleighAppear{0%,37%{opacity:0;transform:translateX(40px)}44%,74%{opacity:1;transform:translateX(0)}86%{opacity:1;transform:translate(0,-180px)}100%{opacity:0;transform:translate(0,-700px)}}
+@media(max-width:520px){#winterStory svg{height:250px;min-height:250px;width:100vw}}
+@media(prefers-reduced-motion:reduce){.story-arrival,.story-snow-santa,.story-sack,.story-princess,.story-elf-a,.story-elf-b,.story-flight,.story-reindeer,.deer-leg,.story-sleigh{animation:none!important;opacity:1!important;transform:none!important}}
 
 </style></head><body>
 
@@ -160,6 +169,24 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
     <circle cx="33" cy="58" r="3.5" fill="#34445b"/><circle cx="53" cy="58" r="3.5" fill="#34445b"/>
     <path d="M36 72 Q43 78 50 72" fill="none" stroke="#b66d65" stroke-width="3"/>
     <path d="M15 100 L-4 128 M70 100 L91 128" stroke="#f0c9aa" stroke-width="10" stroke-linecap="round"/>
+   </g>
+   <g class="story-reindeer" transform="translate(730 110) scale(.72)">
+    <path d="M18 93 Q38 54 92 61 L139 77 Q153 91 140 112 L105 122 L43 116Z" fill="#9a6544" stroke="#5f402f" stroke-width="5"/>
+    <path d="M118 76 Q133 34 158 34 Q180 37 176 60 L157 79 L143 98Z" fill="#a87550" stroke="#5f402f" stroke-width="5"/>
+    <path d="M163 40 Q177 22 194 28 L183 51 M157 39 Q151 14 136 10 L143 42" fill="none" stroke="#8c5939" stroke-width="6" stroke-linecap="round"/>
+    <path d="M165 44 L184 5 M175 30 L197 20 M146 34 L132 0 M139 19 L119 12" fill="none" stroke="#d7b06c" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="169" cy="51" r="4" fill="#171d25"/><ellipse cx="187" cy="68" rx="10" ry="7" fill="#5a302a"/>
+    <path d="M42 111 L38 166 L47 168 L61 116 M82 115 L86 166 L96 167 L101 116 M119 110 L126 158 L136 159 L134 103" fill="none" stroke="#805337" stroke-width="10" stroke-linecap="round"/>
+    <path class="deer-leg" d="M43 111 L29 148 L32 171" fill="none" stroke="#805337" stroke-width="10" stroke-linecap="round"/>
+    <path class="deer-leg alt" d="M102 111 L111 147 L107 171" fill="none" stroke="#805337" stroke-width="10" stroke-linecap="round"/>
+    <path d="M22 78 Q4 62 10 46" fill="none" stroke="#805337" stroke-width="7" stroke-linecap="round"/>
+    <path d="M8 46 L0 39 M8 46 L15 35" stroke="#805337" stroke-width="4"/>
+   </g>
+   <g class="story-sleigh" transform="translate(650 210)">
+    <path d="M0 45 Q55 63 120 42 L145 18 Q130 74 64 78 Q15 78 0 45Z" fill="#b72f4d" stroke="#6c2138" stroke-width="5"/>
+    <path d="M-12 81 Q60 101 153 75" fill="none" stroke="#d9b45c" stroke-width="7" stroke-linecap="round"/>
+    <path d="M28 25 L28 -4 M28 -4 Q60 -20 92 -4" fill="none" stroke="#d9b45c" stroke-width="6"/>
+    <path d="M12 35 Q54 48 113 33" fill="none" stroke="#f5d778" stroke-width="4"/>
    </g>
    <g class="story-skis" fill="none" stroke="#24547b" stroke-width="8" stroke-linecap="round">
     <path d="M68 304 Q120 313 182 303 M210 304 Q270 313 310 303 M320 304 Q390 313 455 303 M520 304 Q580 313 650 303"/>
