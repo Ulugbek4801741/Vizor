@@ -1,6 +1,7 @@
 import os
 import hashlib
 import hmac
+import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -10,7 +11,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field
-from sqlalchemy import create_engine, String, Text, Integer, Boolean, DateTime, ForeignKey, func
+from sqlalchemy import create_engine, String, Text, Integer, Boolean, DateTime, ForeignKey, func, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker, Session, relationship
 
 APP_VERSION = "0.2.0"
@@ -79,6 +80,15 @@ class GuestProgress(Base):
     completed: Mapped[bool] = mapped_column(Boolean, default=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
+class GuestProgress(Base):
+    __tablename__ = "guest_lesson_progress"
+    __table_args__ = (UniqueConstraint("guest_id", "lesson_id", name="uq_guest_lesson_progress"),)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    guest_id: Mapped[str] = mapped_column(String(36), index=True)
+    lesson_id: Mapped[int] = mapped_column(ForeignKey("lessons.id", ondelete="CASCADE"), index=True)
+    completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
 class Progress(Base):
     __tablename__ = "lesson_progress"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -112,6 +122,9 @@ def verify_password(password: str, stored: str) -> bool:
 def issue_token(user: User) -> str:
     return jwt.encode({"sub": str(user.id), "role": user.role, "exp": datetime.now(timezone.utc) + timedelta(hours=24)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
+def issue_guest_token(guest_id: str) -> str:
+    return jwt.encode({"sub": "guest:" + guest_id, "role": "guest", "exp": datetime.now(timezone.utc) + timedelta(days=30)}, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
 bearer = HTTPBearer(auto_error=False)
 def current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db: Session = Depends(get_db)):
     if not credentials:
@@ -134,6 +147,31 @@ def optional_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), d
         return user if user and user.active else None
     except Exception:
         return None
+
+def optional_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db: Session = Depends(get_db)):
+    if not credentials:
+        return None
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if payload.get("role") == "guest":
+            return None
+        user = db.get(User, int(payload["sub"]))
+    except Exception:
+        raise HTTPException(401, "Invalid or expired token")
+    if not user or not user.active:
+        raise HTTPException(401, "Invalid or expired token")
+    return user
+
+def guest_id_from_token(credentials: HTTPAuthorizationCredentials = Depends(bearer)) -> str:
+    if not credentials:
+        raise HTTPException(401, "Guest session required")
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if payload.get("role") != "guest" or not str(payload.get("sub", "")).startswith("guest:"):
+            raise ValueError("not a guest token")
+        return str(payload["sub"]).split(":", 1)[1]
+    except Exception:
+        raise HTTPException(401, "Invalid or expired guest session")
 
 def require_roles(*roles):
     def check(user: User = Depends(current_user)):
@@ -274,6 +312,28 @@ def list_quizzes(course_id: int, db: Session = Depends(get_db)):
         raise HTTPException(404, "Course not found")
     rows = db.query(Quiz).filter_by(course_id=course_id).all()
     return [{"id": q.id, "title": q.title, "questions": __import__("json").loads(q.questions_json or "[]")} for q in rows]
+
+@app.post("/api/guest/lessons/{lesson_id}/complete")
+def complete_guest_lesson(lesson_id: int, guest_id: str = Depends(guest_id_from_token), db: Session = Depends(get_db)):
+    lesson = db.get(Lesson, lesson_id)
+    if not lesson:
+        raise HTTPException(404, "Lesson not found")
+    course = db.get(Course, lesson.course_id)
+    if not course or not course.published:
+        raise HTTPException(404, "Lesson not found")
+    row = db.query(GuestProgress).filter_by(guest_id=guest_id, lesson_id=lesson_id).first()
+    if row is None:
+        row = GuestProgress(guest_id=guest_id, lesson_id=lesson_id, completed=True)
+        db.add(row)
+    else:
+        row.completed = True
+    db.commit()
+    return {"lesson_id": lesson_id, "completed": True, "mode": "guest", "saved_on_server": True}
+
+@app.get("/api/guest/progress")
+def guest_progress(guest_id: str = Depends(guest_id_from_token), db: Session = Depends(get_db)):
+    rows = db.query(GuestProgress).filter_by(guest_id=guest_id, completed=True).all()
+    return {"mode": "guest", "completed_lesson_ids": [row.lesson_id for row in rows], "count": len(rows)}
 
 @app.get("/api/admin/overview")
 def admin_overview(db: Session = Depends(get_db), user: User = Depends(require_roles("admin"))):
