@@ -332,7 +332,58 @@ def list_quizzes(course_id: int, db: Session = Depends(get_db)):
     if not course or not course.published:
         raise HTTPException(404, "Course not found")
     rows = db.query(Quiz).filter_by(course_id=course_id).all()
-    return [{"id": q.id, "title": q.title, "questions": __import__("json").loads(q.questions_json or "[]")} for q in rows]
+    safe = []
+    for quiz in rows:
+        questions = json.loads(quiz.questions_json or "[]")
+        safe_questions = []
+        for index, question in enumerate(questions):
+            safe_questions.append({
+                "id": index,
+                "question": str(question.get("question", "")),
+                "options": question.get("options", [])
+            })
+        safe.append({"id": quiz.id, "title": quiz.title, "questions": safe_questions})
+    return safe
+
+class QuizSubmitIn(BaseModel):
+    answers: dict[str, int] = Field(default_factory=dict)
+
+@app.post("/api/quizzes/{quiz_id}/submit")
+def submit_quiz(
+    quiz_id: int,
+    data: QuizSubmitIn,
+    guest_key: Optional[str] = Header(default=None, alias="X-Guest-ID"),
+    db: Session = Depends(get_db),
+    user: Optional[User] = Depends(optional_current_user)
+):
+    quiz = db.get(Quiz, quiz_id)
+    if not quiz:
+        raise HTTPException(404, "Quiz not found")
+    course = db.get(Course, quiz.course_id)
+    if not course or not course.published:
+        raise HTTPException(404, "Quiz not found")
+    questions = json.loads(quiz.questions_json or "[]")
+    if not questions:
+        raise HTTPException(400, "Quiz has no questions")
+    correct = 0
+    details = []
+    for index, question in enumerate(questions):
+        options = question.get("options", [])
+        answer = data.answers.get(str(index))
+        valid = isinstance(answer, int) and 0 <= answer < len(options)
+        is_correct = valid and answer == question.get("answer_index")
+        correct += int(is_correct)
+        details.append({"question_id": index, "correct": bool(is_correct)})
+    if user is None and (not guest_key or len(guest_key) < 16 or len(guest_key) > 80):
+        raise HTTPException(400, "Guest session ID required")
+    return {
+        "quiz_id": quiz.id,
+        "score": correct,
+        "total": len(questions),
+        "percentage": round(correct * 100 / len(questions)),
+        "passed": correct * 100 >= len(questions) * 60,
+        "details": details
+    }
 
 @app.post("/api/courses/{course_id}/quizzes", status_code=201)
 def create_quiz(course_id: int, data: QuizIn, db: Session = Depends(get_db), user: User = Depends(require_roles("teacher", "admin"))):
