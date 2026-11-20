@@ -8,11 +8,13 @@ import jwt
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import create_engine, String, Text, Integer, Boolean, DateTime, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker, Session, relationship
 
-APP_VERSION = "0.1.0"
+APP_VERSION = "0.2.0"
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 JWT_SECRET = os.getenv("JWT_SECRET", "development-only-change-me")
 JWT_ALGORITHM = "HS256"
@@ -123,8 +125,9 @@ def require_roles(*roles):
         return user
     return check
 
-app = FastAPI(title="VIZOR Learning Platform API", version=APP_VERSION, description="Standalone VIZOR education platform API")
+app = FastAPI(title="VIZOR Learning Platform", version=APP_VERSION, description="Standalone VIZOR education platform")
 app.add_middleware(CORSMiddleware, allow_origins=os.getenv("CORS_ORIGINS", "*").split(","), allow_credentials=False, allow_methods=["*"], allow_headers=["*"])
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @app.on_event("startup")
 def startup():
@@ -154,7 +157,7 @@ class LessonIn(BaseModel):
 
 @app.get("/")
 def root():
-    return {"product": "VIZOR", "status": "running", "version": APP_VERSION, "docs": "/docs"}
+    return FileResponse("app/static/index.html")
 
 @app.get("/health")
 def health():
@@ -186,6 +189,13 @@ def login(data: LoginIn, db: Session = Depends(get_db)):
 @app.get("/api/me")
 def me(user: User = Depends(current_user)):
     return {"id": user.id, "full_name": user.full_name, "email": user.email, "role": user.role}
+
+@app.get("/api/public/courses")
+def public_courses(db: Session = Depends(get_db)):
+    if SessionLocal is None:
+        return []
+    rows = db.query(Course).filter(Course.published.is_(True)).order_by(Course.id.desc()).all()
+    return [{"id": c.id, "title": c.title, "description": c.description, "category": c.category, "teacher_id": c.teacher_id} for c in rows]
 
 @app.get("/api/courses")
 def courses(db: Session = Depends(get_db), user: User = Depends(current_user)):
