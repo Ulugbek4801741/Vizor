@@ -156,6 +156,16 @@ input,select,textarea{min-width:0;max-width:100%}
 }
 
 
+
+/* New Year greeting: ten letter bursts in six seconds */
+#newYearGreeting{position:fixed;inset:0;z-index:5;display:grid;place-items:center;pointer-events:none;overflow:hidden;padding:16px;text-align:center}
+#newYearGreeting .greeting-line{max-width:100%;font-weight:1000;font-size:clamp(25px,7vw,76px);line-height:1.08;letter-spacing:clamp(1px,.5vw,6px);color:#d51f68;text-shadow:0 3px 0 #fff,0 7px 22px #16395b55;overflow-wrap:anywhere}
+#newYearGreeting .greeting-letter{display:inline-block;opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.2);animation:greetingBurst .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--delay)}
+@keyframes greetingBurst{0%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.15)}20%{opacity:1;transform:translate(0,0) rotate(0) scale(1.12)}55%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(calc(var(--dx)*1.25),calc(var(--dy)*1.25)) rotate(calc(var(--rot)*1.5)) scale(.35)}}
+.holiday-music-wrap{right:12px;bottom:92px}
+#holidayMusic{width:46px;height:46px;min-height:46px;padding:0;display:grid;place-items:center;border-radius:50%;font-size:22px;line-height:1;box-shadow:0 5px 16px #a62b653f}
+@media(max-width:520px){.holiday-music-wrap{right:8px;bottom:86px}#holidayMusic{width:42px;height:42px;min-height:42px;font-size:20px}}
+
 /* Winter artwork sits above page content; controls stay in the foreground. */
 main{z-index:auto}
 #winterStory{z-index:3}
@@ -163,6 +173,7 @@ main button,header button,.bottom-nav button,#holidayMusic,.holiday-music-wrap b
 
 </style></head><body>
 
+<div id="newYearGreeting" aria-live="off" aria-hidden="true"><div class="greeting-line" id="newYearGreetingLine"></div></div>
 <div id="winterStory" aria-label="Qordan yasalgan Qorbobo, Qorqiz va elflar chang‘ida osmonga uchib ketadi">
 <svg viewBox="0 0 1000 320" role="img" aria-label="Qorbobo qopini yerga qo‘yadi, Qorqiz va elflar bilan chang‘ida osmonga uchadi" xmlns="http://www.w3.org/2000/svg">
  <defs>
@@ -297,7 +308,7 @@ main button,header button,.bottom-nav button,#holidayMusic,.holiday-music-wrap b
  </svg>
 </div>
 <div class="holiday-music-wrap">
- <button id="holidayMusic" type="button" aria-expanded="false">🎵 Yangi yil musiqalarini tanlash</button>
+ <button id="holidayMusic" type="button" aria-label="Yangi yil musiqalarini tanlash" title="Yangi yil musiqalari" aria-expanded="false">🎵</button>
  <div id="holidayMusicPanel" class="holiday-panel hidden">
   <strong>🎄 Yangi yil musiqalari</strong>
   <label for="holidayTrack">10 ta original kuy:</label>
@@ -357,6 +368,14 @@ $('courseForm').onsubmit=async e=>{e.preventDefault();try{let c=await api('/api/
 $('lessonForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/courses/'+currentCourseId+'/lessons',{method:'POST',body:JSON.stringify({title:$('lessonTitle').value,content:$('lessonContent').value,video_url:$('lessonVideo').value||null,position:1})});alert('Dars saqlandi.');e.target.reset()}catch(e){alert(e.message)}};
 $('quizForm').onsubmit=async e=>{e.preventDefault();try{let questions=JSON.parse($('quizQuestions').value);await api('/api/courses/'+currentCourseId+'/quizzes',{method:'POST',body:JSON.stringify({title:$('quizTitle').value,questions})});alert('Test saqlandi.');e.target.reset()}catch(e){alert('Test ma’lumotlarini tekshiring: '+e.message)}};
 updateMode();loadCourses();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('install').classList.remove('hidden')});$('install').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('install').classList.add('hidden')}};
+
+/* Six-second New Year greeting: 10 animated letter bursts */
+(()=>{
+ const line=document.getElementById('newYearGreetingLine');if(!line)return;
+ const phrase='KELAYOTGAN YANGI YILINGIZ BILAN!';let run=0;
+ function burst(){line.replaceChildren();for(let i=0;i<phrase.length;i++){const ch=phrase[i],span=document.createElement('span');span.className='greeting-letter';span.textContent=ch===' '?'\\u00a0':ch;span.style.setProperty('--dx',((Math.random()-.5)*innerWidth*.9).toFixed(0)+'px');span.style.setProperty('--dy',((Math.random()-.5)*innerHeight*.75).toFixed(0)+'px');span.style.setProperty('--rot',((Math.random()-.5)*100).toFixed(0)+'deg');span.style.setProperty('--delay',(Math.random()*.12).toFixed(2)+'s');line.append(span)}}
+ burst();const timer=setInterval(()=>{run++;burst();if(run>=10){clearInterval(timer);setTimeout(()=>{line.replaceChildren();run=0;setInterval(burst,600)},600)}},600);
+})();
 
 /* Winter snowfall, animated Santa-and-elf parade, ten original melodies and personal 60-second audio */
 (()=>{
