@@ -155,6 +155,12 @@ input,select,textarea{min-width:0;max-width:100%}
  .topnav button{font-size:11px}
 }
 
+
+/* Winter artwork sits above page content; controls stay in the foreground. */
+main{z-index:auto}
+#winterStory{z-index:3}
+main button,header button,.bottom-nav button,#holidayMusic,.holiday-music-wrap button{position:relative;z-index:4}
+
 </style></head><body>
 
 <div id="winterStory" aria-label="Qordan yasalgan Qorbobo, Qorqiz va elflar chang‘ida osmonga uchib ketadi">
