@@ -157,19 +157,11 @@ input,select,textarea{min-width:0;max-width:100%}
 
 
 
-/* New Year greeting: ten letter bursts in six seconds */
-#newYearGreeting{position:fixed;inset:0;z-index:5;display:grid;place-items:center;pointer-events:none;overflow:hidden;padding:16px;text-align:center}
-#newYearGreeting .greeting-line{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;max-width:100%;font-weight:1000;font-size:clamp(23px,6.5vw,76px);line-height:1.12;letter-spacing:clamp(0px,.35vw,4px);color:#d51f68;text-shadow:0 3px 0 #fff,0 7px 22px #16395b55;overflow-wrap:anywhere}
-#newYearGreeting .greeting-letter{display:inline-block;white-space:pre;opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.2);animation:greetingBurst .6s cubic-bezier(.2,.8,.2,1) both}
-@keyframes greetingBurst{0%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.25)}18%{opacity:1;transform:translate(0,0) rotate(0) scale(1.08)}72%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(calc(var(--dx)*.8),calc(var(--dy)*.8)) rotate(var(--rot)) scale(.45)}}
-.holiday-music-wrap{right:12px;bottom:92px}
-#holidayMusic{width:46px;height:46px;min-height:46px;padding:0;display:grid;place-items:center;border-radius:50%;font-size:22px;line-height:1;box-shadow:0 5px 16px #a62b653f}
 @media(max-width:520px){.holiday-music-wrap{right:8px;bottom:86px}#holidayMusic{width:42px;height:42px;min-height:42px;font-size:20px}}
 
 /* Winter artwork is layered over page panels; interactive controls remain readable and tappable. */
 main{z-index:auto}
 #winterStory{z-index:5}
-#newYearGreeting{z-index:7}
 main button,header button,.bottom-nav button{position:relative;z-index:6}
 .holiday-music-wrap{position:fixed;right:8px;bottom:76px;z-index:8;display:grid;justify-items:end;gap:6px}
 #holidayMusic,.holiday-music-wrap button{position:relative;z-index:8;width:34px;height:34px;min-height:34px;padding:0;display:grid;place-items:center;border:1px solid #ffffffd9;border-radius:50%;font-size:17px;line-height:1;background:linear-gradient(145deg,#d72d70,#178b68);color:#fff;box-shadow:0 3px 10px #17365f45}
@@ -178,7 +170,6 @@ main button,header button,.bottom-nav button{position:relative;z-index:6}
 
 </style></head><body>
 
-<div id="newYearGreeting" aria-live="off" aria-hidden="true"><div class="greeting-line" id="newYearGreetingLine"></div></div>
 <div id="winterStory" aria-label="Qordan yasalgan Qorbobo, Qorqiz va elflar chang‘ida osmonga uchib ketadi">
 <svg viewBox="0 0 1000 320" role="img" aria-label="Qorbobo qopini yerga qo‘yadi, Qorqiz va elflar bilan chang‘ida osmonga uchadi" xmlns="http://www.w3.org/2000/svg">
  <defs>
@@ -374,13 +365,6 @@ $('lessonForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/course
 $('quizForm').onsubmit=async e=>{e.preventDefault();try{let questions=JSON.parse($('quizQuestions').value);await api('/api/courses/'+currentCourseId+'/quizzes',{method:'POST',body:JSON.stringify({title:$('quizTitle').value,questions})});alert('Test saqlandi.');e.target.reset()}catch(e){alert('Test ma’lumotlarini tekshiring: '+e.message)}};
 updateMode();loadCourses();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('install').classList.remove('hidden')});$('install').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('install').classList.add('hidden')}};
 
-/* Six-second New Year greeting: 10 animated letter bursts */
-(()=>{
- const line=document.getElementById('newYearGreetingLine');if(!line)return;
- const phrase='KELAYOTGAN YANGI YILINGIZ BILAN!';let run=0;
-  function burst(){line.replaceChildren();for(let i=0;i<phrase.length;i++){const ch=phrase[i],span=document.createElement('span');span.className='greeting-letter';span.textContent=ch===' '?' ':ch;span.style.setProperty('--dx',((Math.random()-.5)*innerWidth*.72).toFixed(0)+'px');span.style.setProperty('--dy',((Math.random()-.5)*innerHeight*.55).toFixed(0)+'px');span.style.setProperty('--rot',((Math.random()-.5)*70).toFixed(0)+'deg');line.append(span)}}
-  burst();const timer=setInterval(()=>{run++;if(run>=10){clearInterval(timer);setTimeout(()=>line.replaceChildren(),600);return}burst()},600);
-})();
 
 /* Winter snowfall, animated Santa-and-elf parade, ten original melodies and personal 60-second audio */
 (()=>{
