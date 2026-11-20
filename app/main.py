@@ -216,7 +216,8 @@ class QuizIn(BaseModel):
 
 @app.get("/")
 def root():
-    return FileResponse("app/static/index.html")
+    # Serve the original VIZOR multi-screen learning app, not the simplified marketing landing page.
+    return FileResponse("app/index.html")
 
 @app.get("/api/public/courses")
 def public_courses(db: Session = Depends(get_db)):
@@ -233,7 +234,7 @@ def manifest():
 
 @app.get("/sw.js")
 def service_worker():
-    return Response("""const CACHE='vizor-shell-v5'; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/'])))); self.addEventListener('activate',e=>e.waitUntil(self.clients.claim())); self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return; const u=new URL(e.request.url); if(u.origin!==location.origin)return; if(u.pathname.startsWith('/api/'))return; e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}return r;}).catch(()=>caches.match(e.request).then(r=>r||caches.match('/'))));});""", media_type="application/javascript")
+    return Response("""const CACHE='vizor-shell-v6'; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/'])))); self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('vizor-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))); self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return; const u=new URL(e.request.url); if(u.origin!==location.origin)return; if(u.pathname.startsWith('/api/'))return; e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}return r;}).catch(()=>caches.match(e.request).then(r=>r||caches.match('/'))));});""", media_type="application/javascript")
 
 @app.get("/ready")
 def ready(db: Session = Depends(get_db)):
