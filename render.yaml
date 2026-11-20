@@ -17,14 +17,6 @@ services:
         generateValue: true
       - key: PYTHON_VERSION
         value: 3.12.8
-  - type: pserv
-    name: vizor-database-proxy-placeholder
-    runtime: docker
-    plan: free
-    region: ohio
-    dockerfilePath: ./Dockerfile
-    dockerCommand: "echo unused"
-    autoDeploy: false
 
 databases:
   - name: vizor-database
