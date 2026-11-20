@@ -5,7 +5,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import jwt
-from fastapi import FastAPI, Depends, HTTPException, status, Header\nfrom fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Depends, HTTPException, status, Header
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field
@@ -70,6 +71,14 @@ class Quiz(Base):
     title: Mapped[str] = mapped_column(String(200))
     questions_json: Mapped[str] = mapped_column(Text, default="[]")
 
+class GuestProgress(Base):
+    __tablename__ = "guest_lesson_progress"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    guest_key: Mapped[str] = mapped_column(String(80), index=True)
+    lesson_id: Mapped[int] = mapped_column(ForeignKey("lessons.id", ondelete="CASCADE"), index=True)
+    completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
 class Progress(Base):
     __tablename__ = "lesson_progress"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -116,7 +125,17 @@ def current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db
         raise HTTPException(401, "Invalid or expired token")
     return user
 
-def optional_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db: Session = Depends(get_db)):\n    if not credentials:\n        return None\n    try:\n        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])\n        user = db.get(User, int(payload["sub"]))\n        return user if user and user.active else None\n    except Exception:\n        return None\n\ndef require_roles(*roles):
+def optional_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db: Session = Depends(get_db)):
+    if not credentials:
+        return None
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        user = db.get(User, int(payload["sub"]))
+        return user if user and user.active else None
+    except Exception:
+        return None
+
+def require_roles(*roles):
     def check(user: User = Depends(current_user)):
         if user.role not in roles:
             raise HTTPException(403, "Permission denied")
@@ -152,9 +171,11 @@ class LessonIn(BaseModel):
     video_url: Optional[str] = None
     position: int = 1
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def root():
-    return {"product": "VIZOR", "status": "running", "version": APP_VERSION, "docs": "/docs"}
+    from pathlib import Path
+    page = Path(__file__).with_name("index.html")
+    return page.read_text(encoding="utf-8") if page.exists() else "<h1>VIZOR API is running</h1>"
 
 @app.get("/health")
 def health():
@@ -224,19 +245,37 @@ def list_lessons(course_id: int, db: Session = Depends(get_db), user: Optional[U
     return [{"id": l.id, "title": l.title, "content": l.content, "video_url": l.video_url, "position": l.position} for l in rows]
 
 @app.post("/api/lessons/{lesson_id}/complete")
-def complete_lesson(lesson_id: int, db: Session = Depends(get_db), user: User = Depends(require_roles("student"))):
+def complete_lesson(lesson_id: int, guest_key: Optional[str] = Header(default=None, alias="X-Guest-ID"), db: Session = Depends(get_db), user: Optional[User] = Depends(optional_user)):
     lesson = db.get(Lesson, lesson_id)
     if not lesson:
         raise HTTPException(404, "Lesson not found")
-    row = db.query(Progress).filter_by(student_id=user.id, lesson_id=lesson_id).first()
+    if user is not None and user.role == "student":
+        row = db.query(Progress).filter_by(student_id=user.id, lesson_id=lesson_id).first()
+        if row is None:
+            db.add(Progress(student_id=user.id, lesson_id=lesson_id, completed=True))
+        else:
+            row.completed = True
+        db.commit()
+        return {"lesson_id": lesson_id, "completed": True, "saved": "account"}
+    if not guest_key or len(guest_key) < 16 or len(guest_key) > 80:
+        raise HTTPException(400, "Guest session ID required")
+    row = db.query(GuestProgress).filter_by(guest_key=guest_key, lesson_id=lesson_id).first()
     if row is None:
-        row = Progress(student_id=user.id, lesson_id=lesson_id, completed=True); db.add(row)
+        db.add(GuestProgress(guest_key=guest_key, lesson_id=lesson_id, completed=True))
     else:
         row.completed = True
     db.commit()
-    return {"lesson_id": lesson_id, "completed": True}
+    return {"lesson_id": lesson_id, "completed": True, "saved": "guest-session"}
 
-@app.get("/api/courses/{course_id}/quizzes")\ndef list_quizzes(course_id: int, db: Session = Depends(get_db)):\n    course = db.get(Course, course_id)\n    if not course or not course.published:\n        raise HTTPException(404, "Course not found")\n    rows = db.query(Quiz).filter_by(course_id=course_id).all()\n    return [{"id": q.id, "title": q.title, "questions": __import__("json").loads(q.questions_json or "[]")} for q in rows]\n\n@app.get("/api/admin/overview")
+@app.get("/api/courses/{course_id}/quizzes")
+def list_quizzes(course_id: int, db: Session = Depends(get_db)):
+    course = db.get(Course, course_id)
+    if not course or not course.published:
+        raise HTTPException(404, "Course not found")
+    rows = db.query(Quiz).filter_by(course_id=course_id).all()
+    return [{"id": q.id, "title": q.title, "questions": __import__("json").loads(q.questions_json or "[]")} for q in rows]
+
+@app.get("/api/admin/overview")
 def admin_overview(db: Session = Depends(get_db), user: User = Depends(require_roles("admin"))):
     return {"users": db.query(User).count(), "courses": db.query(Course).count(), "lessons": db.query(Lesson).count(), "enrollments": db.query(Enrollment).count()}
 
