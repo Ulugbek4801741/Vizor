@@ -1,6 +1,6 @@
-# VIZOR
+# VIZOR — Mustaqil ochiq ta’lim platformasi
 
-VIZOR is a standalone learning platform for students, teachers, parents, and administrators.
+VIZOR is an independent education product for learners, teachers, parents, and administrators. It has its own repository, backend, database, web interface, and Android client. It is not a module or service of another AI product.
 
 ## Initial deployment
 
@@ -29,3 +29,16 @@ Android WebView ilovasi `android/` papkasida. Ilova birinchi ishga tushganda VIZ
 - Android Studio: `android/` papkasini oching va Debug APK yarating.
 - GitHub Actions: Android fayllari o‘zgarganda `vizor-android-debug` APK artefaktini yaratishga mo‘ljallangan workflow mavjud.
 - Hozircha bu imzolangan Play Store relizi emas; release signing key alohida sozlanadi.
+
+
+## Mustaqillik va loyiha chegarasi
+
+- Mahsulot nomi: VIZOR.
+- Alohida GitHub repository va alohida Render web service.
+- Alohida PostgreSQL ma’lumotlar bazasi.
+- Alohida Android ilova va VIZOR brendi.
+- Boshqa loyihalarning nomi, kodi, serveri yoki ma’lumotlar bazasiga bog‘lanmaydi.
+
+## Rivojlantirish holati
+
+Hozirgi server versiyasida mehmon kurs katalogi, akkaunt ro‘yxatdan o‘tishi/kirish, o‘qituvchi kurs yaratishi, dars va test ma’lumotlarini saqlash APIlari mavjud. Mini Apps, Lenta, Market, Vakansiyalar, Portfolio, to‘lovlar va to‘liq o‘quvchi/administrator kabinetlari keyingi bosqichlarda mustaqil VIZOR modullari sifatida ishlab chiqiladi; ular tayyor deb ko‘rsatilmaydi.
