@@ -224,11 +224,11 @@ def health():
 
 @app.get("/manifest.webmanifest")
 def manifest():
-    return {"name": "VIZOR — Ochiq ta’lim platformasi", "short_name": "VIZOR", "lang": "uz", "start_url": "/", "scope": "/", "display": "standalone", "background_color": "#0b1220", "theme_color": "#101827", "description": "Ochiq kurslar, darslar va bilim sinovlari"}
+    return {"name": "VIZOR — Ochiq ta’lim platformasi", "short_name": "VIZOR", "lang": "uz", "start_url": "/", "scope": "/", "display": "standalone", "background_color": "#eaf5ff", "theme_color": "#0878ed", "description": "Ochiq kurslar, darslar va bilim sinovlari"}
 
 @app.get("/sw.js")
 def service_worker():
-    return Response("""const CACHE='vizor-shell-v4'; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/'])))); self.addEventListener('activate',e=>e.waitUntil(self.clients.claim())); self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return; const u=new URL(e.request.url); if(u.origin!==location.origin)return; if(u.pathname.startsWith('/api/'))return; e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}return r;}).catch(()=>caches.match(e.request).then(r=>r||caches.match('/'))));});""", media_type="application/javascript")
+    return Response("""const CACHE='vizor-shell-v5'; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/'])))); self.addEventListener('activate',e=>e.waitUntil(self.clients.claim())); self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return; const u=new URL(e.request.url); if(u.origin!==location.origin)return; if(u.pathname.startsWith('/api/'))return; e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}return r;}).catch(()=>caches.match(e.request).then(r=>r||caches.match('/'))));});""", media_type="application/javascript")
 
 @app.get("/ready")
 def ready(db: Session = Depends(get_db)):
