@@ -36,12 +36,12 @@ public class MainActivity extends Activity {
     private void showApp() {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(0xFF0B1220);
+        root.setBackgroundColor(0xFF121824);
 
         TextView brand = new TextView(this);
         brand.setText("VIZOR");
         brand.setTextSize(25);
-        brand.setTextColor(0xFF68D5BD);
+        brand.setTextColor(0xFF4D8DFF);
         brand.setPadding(20, 18, 20, 10);
         root.addView(brand);
 
