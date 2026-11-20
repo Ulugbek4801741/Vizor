@@ -24,7 +24,7 @@ form{display:grid;gap:12px;max-width:650px}form button{padding:12px 16px}textare
 /* VIZOR winter holiday theme */
 :root{--winter-pink:#ff5b9a;--winter-gold:#ffc857;--winter-green:#20a879}
 body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),radial-gradient(ellipse at 92% 18%,#e9fff7 0,transparent 28%),linear-gradient(155deg,#edf7ff,#fff9fc 52%,#f0fff8)}
-.screen.active{position:relative;isolation:isolate}
+.screen.active{position:relative;isolation:isolate;z-index:4}
 .screen.active:before,.screen.active:after{content:"✿  ❀  ✽";position:absolute;z-index:-1;pointer-events:none;font-size:clamp(24px,4vw,46px);letter-spacing:13px;color:#ff80aa;opacity:.22;filter:drop-shadow(0 5px 8px #ff9cbe55)}
 .screen.active:before{top:12px;right:8px;transform:rotate(13deg)}
 .screen.active:after{bottom:10px;left:5px;color:#39b88a;transform:rotate(-12deg)}
