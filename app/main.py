@@ -5,14 +5,14 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import jwt
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Header\nfrom fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import create_engine, String, Text, Integer, Boolean, DateTime, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker, Session, relationship
 
-APP_VERSION = "0.1.0"
+APP_VERSION = "0.2.0"
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 JWT_SECRET = os.getenv("JWT_SECRET", "development-only-change-me")
 JWT_ALGORITHM = "HS256"
@@ -116,7 +116,7 @@ def current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db
         raise HTTPException(401, "Invalid or expired token")
     return user
 
-def require_roles(*roles):
+def optional_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db: Session = Depends(get_db)):\n    if not credentials:\n        return None\n    try:\n        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])\n        user = db.get(User, int(payload["sub"]))\n        return user if user and user.active else None\n    except Exception:\n        return None\n\ndef require_roles(*roles):
     def check(user: User = Depends(current_user)):
         if user.role not in roles:
             raise HTTPException(403, "Permission denied")
@@ -188,7 +188,7 @@ def me(user: User = Depends(current_user)):
     return {"id": user.id, "full_name": user.full_name, "email": user.email, "role": user.role}
 
 @app.get("/api/courses")
-def courses(db: Session = Depends(get_db), user: User = Depends(current_user)):
+def courses(db: Session = Depends(get_db), user: Optional[User] = Depends(optional_user)):
     rows = db.query(Course).filter(Course.published.is_(True)).order_by(Course.id.desc()).all()
     return [{"id": c.id, "title": c.title, "description": c.description, "category": c.category, "teacher_id": c.teacher_id} for c in rows]
 
@@ -216,9 +216,9 @@ def add_lesson(course_id: int, data: LessonIn, db: Session = Depends(get_db), us
     return {"id": lesson.id, "course_id": course_id, "title": lesson.title}
 
 @app.get("/api/courses/{course_id}/lessons")
-def list_lessons(course_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
+def list_lessons(course_id: int, db: Session = Depends(get_db), user: Optional[User] = Depends(optional_user)):
     course = db.get(Course, course_id)
-    if not course or (not course.published and course.teacher_id != user.id and user.role != "admin"):
+    if not course or (not course.published and (user is None or (course.teacher_id != user.id and user.role != "admin"))):
         raise HTTPException(404, "Course not found")
     rows = db.query(Lesson).filter_by(course_id=course_id).order_by(Lesson.position).all()
     return [{"id": l.id, "title": l.title, "content": l.content, "video_url": l.video_url, "position": l.position} for l in rows]
@@ -236,7 +236,7 @@ def complete_lesson(lesson_id: int, db: Session = Depends(get_db), user: User = 
     db.commit()
     return {"lesson_id": lesson_id, "completed": True}
 
-@app.get("/api/admin/overview")
+@app.get("/api/courses/{course_id}/quizzes")\ndef list_quizzes(course_id: int, db: Session = Depends(get_db)):\n    course = db.get(Course, course_id)\n    if not course or not course.published:\n        raise HTTPException(404, "Course not found")\n    rows = db.query(Quiz).filter_by(course_id=course_id).all()\n    return [{"id": q.id, "title": q.title, "questions": __import__("json").loads(q.questions_json or "[]")} for q in rows]\n\n@app.get("/api/admin/overview")
 def admin_overview(db: Session = Depends(get_db), user: User = Depends(require_roles("admin"))):
     return {"users": db.query(User).count(), "courses": db.query(Course).count(), "lessons": db.query(Lesson).count(), "enrollments": db.query(Enrollment).count()}
 
