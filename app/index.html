@@ -6,7 +6,7 @@
 header{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px max(16px,calc((100% - 1180px)/2));background:#ffffffed;border-bottom:1px solid #d8e9fa;backdrop-filter:blur(16px);box-shadow:0 4px 18px #1c5c9910}
 .brand{display:flex;align-items:center;gap:10px;font-weight:950;font-size:24px;letter-spacing:.7px;color:#0758bd}.eye{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#0a65cf,#38a5ff);color:#fff;font-size:23px;box-shadow:0 5px 15px #0878ed40}.brand small{display:block;font-size:9px;letter-spacing:2px;color:#6c8db7;line-height:1.2}
 .topnav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.topnav button,.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:13px;font-weight:800}.primary{background:linear-gradient(110deg,#0878ed,#43aaff)!important;color:#fff!important;border:0!important;box-shadow:0 7px 18px #0878ed30}.tag{display:inline-flex;padding:6px 11px;border-radius:30px;background:#e9f4ff;color:#0870dc;font-size:12px;font-weight:850}
-main{max-width:1180px;margin:auto;padding:24px 18px 110px}.screen{display:none}.screen.active{display:block}
+main{position:relative;z-index:2;max-width:1180px;margin:auto;padding:24px 18px 110px}.screen{display:none}.screen.active{display:block}
 .hero{position:relative;overflow:hidden;isolation:isolate;border:1px solid #c4e1ff;border-radius:30px;padding:clamp(26px,5vw,58px);min-height:280px;background:linear-gradient(115deg,#d8ecff 0%,#f7fbff 52%,#c7e4ff 100%);box-shadow:var(--shadow);margin-bottom:24px}.hero:after{content:"";position:absolute;z-index:-1;width:350px;height:350px;right:-60px;top:-100px;border-radius:50%;background:radial-gradient(circle,#65b6ff70,transparent 68%)}.hero h1{font-size:clamp(30px,5vw,52px);line-height:1.08;max-width:720px;margin:15px 0;color:#064da8;letter-spacing:-1.2px}.hero p{max-width:640px;color:#58789e;font-size:16px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.actions button{padding:12px 18px}
 .admin-contact{display:inline-flex;align-items:center;gap:12px;margin-top:14px;padding:12px 18px;min-width:190px;border:1px solid #b9d9fb;border-radius:16px;background:linear-gradient(110deg,#fff,#eaf5ff);color:#0758bd;text-decoration:none;box-shadow:0 7px 18px #0878ed20;transition:.18s}.admin-contact:hover{transform:translateY(-2px);box-shadow:0 10px 22px #0878ed30}.admin-contact-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#0878ed,#43aaff);color:white;font-size:21px}.admin-contact strong,.admin-contact small{display:block}.admin-contact strong{font-size:15px}.admin-contact small{font-size:12px;color:#6480a4}.admin-contact-arrow{margin-left:auto;font-size:20px;color:#0878ed}
 section{margin:28px 0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}h2{font-size:clamp(21px,3vw,28px);margin:0;color:#104d96}h3{margin:0 0 8px;line-height:1.3}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -76,8 +76,8 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
 
 /* 60-second winter film sequence: staged arrivals, character motion and sleigh departure */
 #holidayParade,#vizorSanta{display:none!important}
-#winterStory{position:fixed;inset:0;z-index:83;pointer-events:none;overflow:hidden}
-#winterStory svg{position:absolute;left:50%;bottom:0;width:min(100vw,1400px);height:min(62vh,560px);min-height:280px;transform:translateX(-50%);overflow:visible;filter:drop-shadow(0 10px 16px #17365f40)}
+#winterStory{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+#winterStory svg{position:absolute;left:50%;bottom:0;width:min(100vw,1400px);height:min(62vh,560px);min-height:280px;transform:translateX(-50%);overflow:visible;opacity:.68;filter:drop-shadow(0 7px 10px #17365f22)}
 .story-arrival{animation:storyArrive 60s linear infinite}
 @keyframes storyArrive{0%,3%{transform:translate(-370px,0)}12%,72%{transform:translate(0,0)}86%{transform:translate(0,-100px) scale(.82);opacity:1}100%{transform:translate(0,-720px) scale(.2);opacity:0}}
 .story-snow-santa{transform-origin:155px 245px;animation:storyAssemble 5s ease-out both, santaBreath 2.8s ease-in-out 5s infinite}
@@ -111,7 +111,7 @@ body{background:radial-gradient(ellipse at 8% 12%,#fff0f6 0,transparent 30%),rad
   <linearGradient id="snowCoat" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#ccecff"/></linearGradient>
   <linearGradient id="redHat" x2="0" y2="1"><stop stop-color="#ff526c"/><stop offset="1" stop-color="#b7193d"/></linearGradient>
  </defs>
- <path d="M0 293 Q170 280 330 293 T660 292 T1000 290 L1000 320 L0 320Z" fill="#fff" opacity=".96"/>
+ <path d="M0 293 Q170 280 330 293 T660 292 T1000 290 L1000 320 L0 320Z" fill="#fff" opacity=".24"/>
  <g class="story-arrival">
   <g class="story-sack">    <path d="M231 206 Q254 184 284 206 L278 273 Q251 286 224 269Z" fill="#a52b45" stroke="#722039" stroke-width="4"/>
     <path d="M232 207 Q257 192 281 207" fill="none" stroke="#f3d16d" stroke-width="9"/>
