@@ -55,9 +55,15 @@ function closeCourse(){courseModal.classList.remove("open");courseModal.setAttri
 $("#courseClose").addEventListener("click",closeCourse);
 courseModal.addEventListener("click",e=>{if(e.target===courseModal)closeCourse()});
 function safeLink(value){try{const u=new URL(value,location.origin);return ["http:","https:"].includes(u.protocol)?u.href:""}catch{return ""}}
+function youtubeEmbedUrl(raw){
+ try{const u=new URL(raw);let id="";
+ if(["youtu.be"].includes(u.hostname))id=u.pathname.split("/").filter(Boolean)[0]||"";
+ else if(["youtube.com","www.youtube.com","m.youtube.com","youtube-nocookie.com","www.youtube-nocookie.com"].includes(u.hostname)){if(u.pathname==="/watch")id=u.searchParams.get("v")||"";else if(u.pathname.startsWith("/embed/")||u.pathname.startsWith("/shorts/"))id=u.pathname.split("/")[2]||""}
+ return /^[A-Za-z0-9_-]{11}$/.test(id)?"https://www.youtube-nocookie.com/embed/"+id+"?playsinline=1&rel=0":""}catch{return ""}
+}
 function showMaterials(data){
  const blocks=[];
- (data.lessons||[]).forEach((lesson,i)=>{let assets=(lesson.assets||[]).map(asset=>{if(asset.kind==="text")return `<p>${escapeHtml(asset.body||"")}</p>`;const href=safeLink(asset.url);return href?`<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(asset.kind.toUpperCase()+" · "+asset.title)}</a>`:""}).join("");const video=safeLink(lesson.video_url);blocks.push(`<article class="lesson-detail"><h3>${i+1}. ${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.content||"")}</p>${video?`<a href="${escapeHtml(video)}" target="_blank" rel="noopener">▶ Video darsni ko‘rish</a>`:""}${assets}</article>`)});
+ (data.lessons||[]).forEach((lesson,i)=>{let assets=(lesson.assets||[]).map(asset=>{if(asset.kind==="text")return `<p>${escapeHtml(asset.body||"")}</p>`;if(asset.kind==="video"){const embed=youtubeEmbedUrl(asset.url||"");return embed?`<div class="vizor-video-frame"><iframe src="${embed}" title="${escapeHtml(asset.title)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`:""}const href=safeLink(asset.url);return href?`<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(asset.kind.toUpperCase()+" · "+asset.title)}</a>`:""}).join("");const embed=youtubeEmbedUrl(lesson.video_url||"");const video=embed?`<div class="vizor-video-frame"><iframe src="${embed}" title="${escapeHtml(lesson.title)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`:"";blocks.push(`<article class="lesson-detail"><h3>${i+1}. ${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.content||"")}</p>${video}${assets}</article>`)});
  (data.practicals||[]).forEach(task=>blocks.push(`<article class="practical-detail"><strong>Amaliyot: ${escapeHtml(task.title)}</strong><p>${escapeHtml(task.instructions)}</p></article>`));
  $("#courseDetailBody").innerHTML=blocks.length?blocks.join(""):"<p>Bu kursga hali darslar joylanmagan.</p>";
 }
@@ -92,4 +98,25 @@ $("#courseAccessButton").addEventListener("click",async()=>{
 });
 $("#courseGrid").addEventListener("click",e=>{const button=e.target.closest("[data-course]");if(button)openCourse(button.dataset.course)});
 
+const teacherPublishModal=$("#teacherPublishModal");
+function closeTeacherPublish(){teacherPublishModal.classList.remove("open");teacherPublishModal.setAttribute("aria-hidden","true")}
+$("#teacherPublishOpen").addEventListener("click",()=>{if(!sessionStorage.getItem("vizor_token")){openAuth("login");return}teacherPublishModal.classList.add("open");teacherPublishModal.setAttribute("aria-hidden","false")});
+$("#teacherPublishClose").addEventListener("click",closeTeacherPublish);
+teacherPublishModal.addEventListener("click",e=>{if(e.target===teacherPublishModal)closeTeacherPublish()});
+$("#publishOffer").addEventListener("change",e=>$("#publishPriceWrap").classList.toggle("hidden",e.target.value!=="paid"));
+$("#teacherPublishForm").addEventListener("submit",async e=>{
+ e.preventDefault();const form=new FormData(e.currentTarget);const token=sessionStorage.getItem("vizor_token");if(!token){openAuth("login");return}
+ const youtube= youtubeEmbedUrl(form.get("youtube_url"));if(!youtube){$("#teacherPublishMessage").textContent="YouTube havolasi noto‘g‘ri. To‘g‘ri video havolasini kiriting.";return}
+ const paid=form.get("offer")==="paid";const price=Number(form.get("price")||0);if(paid&&(!Number.isSafeInteger(price)||price<1)){$("#teacherPublishMessage").textContent="Pullik kurs uchun narxni to‘g‘ri kiriting.";return}
+ const button=$("#teacherPublishSubmit");button.disabled=true;button.textContent="Joylanmoqda…";$("#teacherPublishMessage").textContent="";
+ const headers={"Content-Type":"application/json",Authorization:"Bearer "+token};
+ try{
+  let response=await fetch("/api/courses",{method:"POST",headers,body:JSON.stringify({title:form.get("title"),description:form.get("description"),category:form.get("category")})});let course=await response.json();if(!response.ok)throw new Error(course.detail||"Kurs yaratilmadi");
+  response=await fetch("/api/education/courses/"+course.id+"/offer",{method:"PUT",headers,body:JSON.stringify({is_free:!paid,price_minor:paid?price:0,currency:"UZS"})});let offer=await response.json();if(!response.ok)throw new Error(offer.detail||"Kurs narxi saqlanmadi");
+  response=await fetch("/api/courses/"+course.id+"/lessons",{method:"POST",headers,body:JSON.stringify({title:form.get("lesson_title"),content:form.get("lesson_content"),video_url:form.get("youtube_url"),position:1})});let lesson=await response.json();if(!response.ok)throw new Error(lesson.detail||"Dars yaratilmadi");
+  response=await fetch("/api/courses/"+course.id+"/publish",{method:"POST",headers});let published=await response.json();if(!response.ok)throw new Error(published.detail||"Kurs e’lon qilinmadi");
+  $("#teacherPublishMessage").textContent="Kurs muvaffaqiyatli joylandi!";e.currentTarget.reset();$("#publishPriceWrap").classList.add("hidden");await loadCourses();setTimeout(closeTeacherPublish,900);
+ }catch(err){$("#teacherPublishMessage").textContent=err.message}
+ finally{button.disabled=false;button.textContent="Kursni joylash"}
+});
 loadCourses();
