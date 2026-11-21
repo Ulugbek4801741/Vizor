@@ -407,3 +407,8 @@ def admin_overview(db: Session = Depends(get_db), user: User = Depends(require_r
 @app.get("/api/system/status")
 def system_status(db: Session = Depends(get_db)):
     return {"api": "online", "database": "connected", "version": APP_VERSION}
+
+
+# Additive education marketplace routes and tables.
+from app.education import router as education_router
+app.include_router(education_router)
