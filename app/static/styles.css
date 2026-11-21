@@ -9,3 +9,18 @@
 .hero-promo-description{max-width:760px;font-size:clamp(14px,1.8vw,18px);font-weight:600;line-height:1.85;color:#604d20}
 .hero-promo-tagline{margin-top:5px;padding-top:16px;border-top:1px solid rgba(128,98,27,.25);font-size:13px;font-weight:800;letter-spacing:.2px;color:#80621b}
 @media(max-width:700px){.hero.hero-centered{min-height:0;padding-top:35px;padding-bottom:35px}.hero-promo-button{min-height:300px;padding:35px 23px;border-radius:23px;gap:16px}.hero-promo-title{font-size:36px;letter-spacing:-1.2px}.hero-promo-description{font-size:14px;line-height:1.8}.hero-promo-tagline{font-size:11px}}
+
+
+/* Education catalog: free/paid labels and lesson detail dialog */
+.course-price{font-size:9px;font-weight:800;padding:6px 9px;border-radius:20px;background:#e8f7ef;color:#14734a;white-space:nowrap}
+.course-price.paid{background:#fff2d8;color:#8b5c09}
+.course-detail-modal{max-height:min(86vh,760px);overflow:auto}
+.course-detail-modal>p{line-height:1.7}
+.course-detail-body{display:grid;gap:12px;margin:18px 0;max-height:42vh;overflow:auto}
+.lesson-detail{padding:13px;border:1px solid var(--line);border-radius:12px;background:#f8fafd}
+.lesson-detail h3{font-size:13px;margin:0 0 8px;color:var(--navy)}
+.lesson-detail p{font-size:11px;line-height:1.75;color:var(--muted);white-space:pre-wrap}
+.lesson-detail a{display:inline-block;margin:5px 8px 0 0;color:var(--teal);font-size:11px;font-weight:800}
+.practical-detail{padding:12px;border-left:3px solid var(--gold);background:#fffaf0;border-radius:8px}
+.practical-detail strong{font-size:12px}
+.practical-detail p{font-size:11px;line-height:1.6;color:var(--muted)}
