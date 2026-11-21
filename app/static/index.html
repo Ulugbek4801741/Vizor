@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a56">
+  <meta name="description" content="VIZOR — ochiq ta’lim platformasi. Kurslarni ko‘ring, bilim oling va o‘z ustingizda ishlang.">
+  <title>VIZOR — Ochiq ta’lim platformasi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Menyuni ochish">☰</button>
+    <a class="brand" href="/" aria-label="VIZOR bosh sahifa"><span class="brand-mark">V</span><span>VIZOR</span></a>
+    <nav class="desktop-nav" aria-label="Asosiy navigatsiya">
+      <a class="active" href="#home">Asosiy</a><a href="#courses">Kurslar</a><a href="#categories">Yo‘nalishlar</a><a href="#about">Biz haqimizda</a>
+    </nav>
+    <div class="top-actions"><button class="login-btn" id="loginOpen">Kirish</button><button class="primary-btn small" id="registerOpen">Ro‘yxatdan o‘tish</button></div>
+  </header>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="side-menu" id="sideMenu" aria-label="Sayt menyusi">
+    <div class="side-head"><div class="brand"><span class="brand-mark">V</span><span>VIZOR</span></div><button class="icon-btn" id="menuClose" aria-label="Yopish">×</button></div>
+    <p class="side-label">TA’LIM PLATFORMASI</p>
+    <a href="#home">⌂ <span>Bosh sahifa</span></a><a href="#courses">▤ <span>Barcha kurslar</span></a><a href="#categories">◈ <span>Yo‘nalishlar</span></a><a href="#benefits">✦ <span>Imkoniyatlar</span></a><a href="#about">ⓘ <span>VIZOR haqida</span></a>
+    <div class="side-note"><strong>Bilim olishga tayyormisiz?</strong><p>O‘zingizga mos kursni tanlang va o‘rganishni boshlang.</p><button class="primary-btn" id="sideRegister">Boshlash</button></div>
+  </aside>
+
+  <main id="home">
+    <section class="hero wrap hero-centered">
+      <a class="hero-promo-button" href="#courses" aria-label="VIZOR — Kelajakka qadam. Kurslarni ko‘rish">
+        <span class="hero-promo-brand">VIZOR</span>
+        <span class="hero-promo-title">Kelajakka qadam</span>
+        <span class="hero-promo-description">Yangi ko‘nikmalarni o‘rganing, bilimlaringizni sinab ko‘ring va maqsadlaringiz sari ishonch bilan boring.</span>
+        <span class="hero-promo-tagline">VIZOR — bilim sari birinchi qadam</span>
+      </a>
+    </section>
+
+    <section class="stats wrap" aria-label="Platforma imkoniyatlari"><div><strong>01</strong><span>Ochiq kirish</span></div><div><strong>02</strong><span>Turli yo‘nalishlar</span></div><div><strong>03</strong><span>Amaliy bilimlar</span></div><div><strong>04</strong><span>O‘z sur’atingizda</span></div></section>
+
+    <section class="section wrap" id="categories">
+      <div class="section-heading"><div><span class="section-kicker">O‘ZINGIZGA MOSINI TOPING</span><h2>Ta’lim yo‘nalishlari</h2><p>Qiziqishingiz va maqsadingizga mos yo‘nalishni tanlang.</p></div><a class="subtle-link" href="#courses">Barcha kurslar <span>→</span></a></div>
+      <div class="category-grid">
+        <a class="category-card cat-blue" href="#courses" data-category="Dasturlash"><span class="category-icon">⌘</span><strong>Dasturlash</strong><small>Raqamli kasblar va IT</small><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-teal" href="#courses" data-category="Dizayn"><span class="category-icon">✎</span><strong>Dizayn va ijod</strong><small>G‘oya va kreativlik</small><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-gold" href="#courses" data-category="Tillar"><span class="category-icon">文</span><strong>Xorijiy tillar</strong><small>Til va muloqot</small><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-purple" href="#courses" data-category="Biznes"><span class="category-icon">↗</span><strong>Biznes va moliya</strong><small>Kasbiy rivojlanish</small><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-coral" href="#courses" data-category="Media"><span class="category-icon">▣</span><strong>Media va kontent</strong><small>Video, foto va ijod</small><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-sky" href="#courses" data-category="Shaxsiy rivojlanish"><span class="category-icon">✦</span><strong>Shaxsiy rivojlanish</strong><small>Yangi ko‘nikmalar</small><span class="card-arrow">↗</span></a>
+      </div>
+    </section>
+
+    <section class="courses-section" id="courses"><div class="wrap section">
+      <div class="section-heading"><div><span class="section-kicker">BILIM OLISHNI BOSHLANG</span><h2>Ommabop kurslar</h2><p>Platformadagi mavjud kurslarni ko‘rib chiqing.</p></div><span class="course-count" id="courseCount">Kurslar yuklanmoqda…</span></div>
+      <div class="course-tools"><label class="search-box"><span>⌕</span><input id="courseSearch" type="search" placeholder="Kurs nomi bo‘yicha qidirish…" aria-label="Kurs qidirish"></label><select id="categoryFilter" aria-label="Yo‘nalish bo‘yicha saralash"><option value="">Barcha yo‘nalishlar</option><option>Dasturlash</option><option>Dizayn</option><option>Tillar</option><option>Biznes</option><option>Media</option></select></div>
+      <div class="course-grid" id="courseGrid"><div class="loading-card">Kurslar yuklanmoqda…</div></div>
+    </div></section>
+
+    <section class="benefits wrap" id="benefits"><div class="benefit-intro"><span class="section-kicker">VIZOR BILAN O‘RGANING</span><h2>Ta’lim — hamma uchun qulay.</h2><p>VIZOR bilim olishni sodda, tushunarli va qulay qilish uchun yaratilmoqda.</p></div><div class="benefit-list"><article><span>01</span><div><strong>Mehmon sifatida ko‘rish</strong><p>Ro‘yxatdan o‘tmasdan ochiq sahifalar va kurslar bilan tanishing.</p></div></article><article><span>02</span><div><strong>O‘zingizga mos yo‘nalish</strong><p>Kategoriyalar va qidiruv orqali kerakli kursni toping.</p></div></article><article><span>03</span><div><strong>Bilimingizni sinang</strong><p>Kurslar tarkibidagi darslar va testlar orqali rivojlaning.</p></div></article></div></section>
+
+    <section class="final-cta wrap" id="about"><div><span class="section-kicker">KELAJAK SIZNING QO‘LINGIZDA</span><h2>O‘rganishni bugun boshlang.</h2><p>VIZOR bilan yangi bilimlar sari birinchi qadamni tashlang.</p></div><button class="primary-btn" id="ctaRegister">Ro‘yxatdan o‘tish <span>→</span></button></section>
+  </main>
+
+  <footer class="footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="#"><span class="brand-mark">V</span><span>VIZOR</span></a><span>Ochiq ta’lim platformasi</span><span>© <span id="year"></span> VIZOR. Barcha huquqlar himoyalangan.</span></div></footer>
+  <nav class="mobile-nav" aria-label="Pastki navigatsiya"><a class="active" href="#home"><b>⌂</b><span>Asosiy</span></a><a href="#categories"><b>◈</b><span>Yo‘nalishlar</span></a><a href="#courses"><b>▤</b><span>Kurslar</span></a><button id="mobileLogin"><b>♙</b><span>Kirish</span></button></nav>
+
+  <div class="modal-backdrop" id="authModal" aria-hidden="true"><section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle"><button class="modal-close" id="authClose" aria-label="Yopish">×</button><div class="brand modal-brand"><span class="brand-mark">V</span><span>VIZOR</span></div><span class="section-kicker">TA’LIM PLATFORMASI</span><h2 id="authTitle">Xush kelibsiz!</h2><p id="authDescription">Hisobingizga kiring yoki yangi hisob yarating.</p><div class="auth-tabs"><button class="selected" data-mode="login">Kirish</button><button data-mode="register">Ro‘yxatdan o‘tish</button></div><form id="authForm"><label id="nameField" class="hidden">Ism familiya<input name="full_name" minlength="2" placeholder="Ism familiyangiz"></label><label>Email<input name="email" type="email" required placeholder="email@example.com"></label><label>Parol<input name="password" type="password" minlength="8" required placeholder="Kamida 8 ta belgi"></label><button class="primary-btn full" type="submit" id="authSubmit">Kirish</button><p class="form-message" id="formMessage" role="status"></p></form><small class="guest-hint">Hozircha mehmon sifatida kurslarni ko‘rishingiz mumkin.</small></section></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
