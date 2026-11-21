@@ -1,0 +1,32 @@
+{
+  "name": "vizor-windows",
+  "version": "1.0.0",
+  "description": "VIZOR desktop client for Windows",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "uz.vizor.desktop",
+    "productName": "VIZOR",
+    "directories": {
+      "output": "dist"
+    },
+    "files": ["main.js", "package.json"],
+    "win": {
+      "target": ["nsis"],
+      "artifactName": "VIZOR-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
